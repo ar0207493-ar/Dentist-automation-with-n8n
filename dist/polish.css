@@ -1,8 +1,11 @@
 /* Clear layout and appointment form updates. */
 .hero-shell { max-width:100%; }
 html { scroll-behavior:smooth; scroll-padding-top:88px; }
-.site-header { position:sticky; top:0; z-index:50; width:100%; padding:12px clamp(18px,4vw,54px); color:#fff; background:rgba(33,72,75,.97); box-shadow:0 1px 0 #ffffff20; backdrop-filter:blur(14px); }
-.mobile-nav:not([hidden]) { position:fixed; z-index:49; top:74px; left:16px; right:16px; }
+.hero-shell { position:relative; }
+.site-header { position:absolute; top:12px; left:12px; right:12px; z-index:50; width:auto; padding:18px clamp(18px,4vw,54px); color:#fff; background:transparent; box-shadow:none; transition:background-color .25s ease,backdrop-filter .25s ease,padding .25s ease; }
+.site-header.is-stuck { position:fixed; top:0; left:0; right:0; padding:12px clamp(18px,4vw,54px); background:rgba(33,72,75,.76); border-bottom:1px solid #ffffff24; box-shadow:0 8px 28px #102f321c; -webkit-backdrop-filter:blur(16px); backdrop-filter:blur(16px); }
+.mobile-nav:not([hidden]) { position:fixed; z-index:49; top:76px; left:16px; right:16px; }
+.hero-content { margin-top:140px; }
 .care-journey { display:none; }
 .about-top { grid-template-columns:1fr; }
 .about-top h2 { max-width:850px; }
@@ -44,8 +47,10 @@ html { scroll-behavior:smooth; scroll-padding-top:88px; }
 .slider-controls .icon-button:hover { background:#39b2bf; color:#fff; }
 
 @media(max-width:800px) {
-  .site-header { padding:11px 20px; }
-  .mobile-nav:not([hidden]) { top:67px; }
+  .site-header { padding:16px 20px; }
+  .site-header.is-stuck { padding:10px 20px; }
+  .mobile-nav:not([hidden]) { top:66px; }
+  .hero-content { margin-top:128px; }
   .appointment-section { grid-template-columns:1fr; gap:27px; padding-top:60px; padding-bottom:60px; }
   .appointment-copy { position:static; }
   .appointment-copy h2 { font-size:clamp(32px,7vw,44px); }
@@ -64,3 +69,4 @@ html { scroll-behavior:smooth; scroll-padding-top:88px; }
 @media(prefers-reduced-motion:reduce) {
   html,.benefit-track { scroll-behavior:auto; }
 }
+

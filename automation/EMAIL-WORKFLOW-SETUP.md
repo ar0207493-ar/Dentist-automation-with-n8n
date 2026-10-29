@@ -1,6 +1,6 @@
 # Dentora appointment email workflow
 
-Import `dentora-email-appointments.json` into the hosted n8n instance at `https://dentist-n8n-server.onrender.com`. Use the Gmail account `ar0207493@gmail.com` for both Gmail nodes. The workflow validates the request, emails the clinic at `ar0207493@gmail.com`, then sends the patient a professional receipt email to the address entered in the form. It clearly says the appointment is only confirmed after the clinic follows up.
+Import `dentora-email-appointments.json` into the hosted n8n instance at `https://dentist-n8n-server.onrender.com`. Connect the same Gmail OAuth2 credential for `ar0207493@gmail.com` to both Gmail HTTP Request nodes. The workflow validates the request, sends a branded notification to the clinic, then sends the patient a matching receipt email. Both emails use the Dentora logo, dark teal banner, and footer links. The patient email clearly says the appointment is only confirmed after the clinic follows up.
 
 ## Finish setup in n8n
 
@@ -14,3 +14,4 @@ Import `dentora-email-appointments.json` into the hosted n8n instance at `https:
 The checked-in form uses `https://dentist-n8n-server.onrender.com/webhook/dentora-appointment`. It reports success only when the final response confirms that both emails finished. A published workflow and connected Gmail credentials are required. If a step fails, inspect the latest failed execution in n8n before retrying; the clinic email may already have been sent even if the patient email failed. The free Render demo may sleep when inactive.
 
 WhatsApp is intentionally not part of this workflow.
+

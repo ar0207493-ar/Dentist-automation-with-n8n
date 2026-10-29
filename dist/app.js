@@ -6,6 +6,10 @@ let lastTrigger = null;
 let toastTimeout;
 
 $('#year').textContent = new Date().getFullYear();
+const siteHeader = $('.site-header');
+const updateHeaderState = () => siteHeader.classList.toggle('is-stuck', window.scrollY > 40);
+updateHeaderState();
+window.addEventListener('scroll', updateHeaderState, {passive:true});
 const localToday = new Date();
 localToday.setMinutes(localToday.getMinutes() - localToday.getTimezoneOffset());
 appointmentForm.elements.date.min = localToday.toISOString().slice(0, 10);
@@ -153,3 +157,4 @@ if ('IntersectionObserver' in window) {
   }, {rootMargin:'-10% 0px -65% 0px'});
   $$('#home, #about, #services, #appointment').forEach(section => navObserver.observe(section));
 }
+
