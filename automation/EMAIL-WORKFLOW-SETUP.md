@@ -1,6 +1,8 @@
 # Dentora appointment email workflow
 
-Import `dentora-email-appointments.json` into the hosted n8n instance at `https://dentist-n8n-server.onrender.com`. Connect the same Gmail OAuth2 credential for `ar0207493@gmail.com` to both Gmail HTTP Request nodes. The workflow validates the request, sends a branded notification to the clinic, then sends the patient a matching receipt email. Both emails use the Dentora logo, dark teal banner, and footer links. The patient email clearly says the appointment is only confirmed after the clinic follows up.
+Import `dentora-email-appointments.json` into the hosted n8n instance at `https://dentist-n8n-server.onrender.com`. Connect the same Gmail OAuth2 credential for `ar0207493@gmail.com` to both Gmail HTTP Request nodes. The workflow validates the request, sends a branded notification to the clinic, then sends the patient a matching receipt email. When a note is provided, Gemini drafts a short, polite, non-clinical acknowledgement based on the note; if Gemini is unavailable, the email uses a standard courteous reply. Both emails use the Dentora logo, dark teal banner, and footer links. The patient email clearly says the appointment is only confirmed after the clinic follows up.
+
+For Gemini, add `GEMINI_API_KEY` as a secret in the Render service's **Environment** settings. Do not place the key in this repository or the website. Only the note text is sent to Gemini; the patient's name, email, and phone stay out of that request.
 
 ## Finish setup in n8n
 

@@ -143,7 +143,7 @@ $$('[data-article]').forEach(button => button.addEventListener('click', () => {
   showContent(article.category, article.title, article.body, button);
 }));
 $$('[data-info]').forEach(button => button.addEventListener('click', () => {
-  if (button.dataset.info === 'privacy') showContent('Your privacy', 'A little clarity about your details.', '<p>Appointment details are sent to the clinic only when the email workflow is connected. The clinic uses them to respond to your request. The appointment is not confirmed until the clinic contacts you.</p><p>No WhatsApp messages are sent by this form. Fonts may load from Google Fonts; no advertising or analytics scripts are included.</p>', button);
+  if (button.dataset.info === 'privacy') showContent('Your privacy', 'A little clarity about your details.', '<p>Appointment details are sent to the clinic to respond to your request. If you include a note, its text is also sent to Google Gemini to draft a brief, courteous acknowledgement. Your name, email, and phone are not sent to Gemini. The AI reply is not dental advice or a clinical review, and your appointment is not confirmed until the clinic contacts you.</p><p>No WhatsApp messages are sent by this form. Fonts may load from Google Fonts; no advertising or analytics scripts are included.</p>', button);
   else showContent('Accessibility', 'A comfortable experience for everyone.', '<p>The page supports keyboard navigation, visible focus indicators, reduced motion preferences, and layouts that adapt to different screen sizes.</p><p>Dialog windows can be closed with Escape, and every form field has a visible label. For appointment help, use the form or email the clinic.</p>', button);
 }));
 
