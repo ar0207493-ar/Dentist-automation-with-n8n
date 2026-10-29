@@ -95,7 +95,7 @@ appointmentForm.addEventListener('submit', async event => {
       })
     });
     const result = await response.json().catch(() => null);
-    if (!response.ok || result?.success === false) throw new Error('n8n rejected the request');
+    if (!response.ok || result?.success !== true) throw new Error('n8n did not confirm the request');
     status.textContent = 'Request received. Check your inbox for an email confirmation; the clinic will contact you to confirm a time.';
     appointmentForm.reset();
     appointmentForm.elements.date.min = localToday.toISOString().slice(0, 10);

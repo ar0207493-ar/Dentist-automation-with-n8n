@@ -19,7 +19,7 @@ Import this GitHub repository into Vercel. `vercel.json` selects the static `dis
 - GSAP 3.15.0 + ScrollTrigger: masked text reveals, staggered editorial cards, subtle hero parallax, and reading progress. No scroll hijacking.
 - Locally hosted, silent, looping 720p dental banner video. Play/pause control, poster fallback, reduced-motion and data-saving preferences, and offscreen/tab visibility pausing.
 - Accessible mobile menu, benefit and patient-story carousels, journal dialogs, and appointment-request planner with a downloadable request.
-- Newsletter signup is a browser-local preview. Appointment requests use the n8n workflow in `automation/`; the checked-in loopback URL works only for local previews. Before accepting requests on Vercel, host n8n at a public HTTPS address, connect Gmail, and set that production webhook URL in `dist/index.html`.
+- Newsletter signup is a browser-local preview. Appointment requests use the public HTTPS n8n webhook at `https://dentist-n8n-server.onrender.com/webhook/dentora-appointment`. The workflow in `automation/` must be published with both Gmail nodes connected. The form only reports success when n8n explicitly confirms completion of both email steps. The Render demo can sleep when inactive.
 - Team and patient stories are clearly marked illustrative. Stock media does not imply endorsement.
 
 ## Assets
