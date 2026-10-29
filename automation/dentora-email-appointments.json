@@ -34,8 +34,7 @@
         "emailType": "html",
         "message": "={{ $json.adminHtml }}",
         "options": {
-          "appendAttribution": false,
-          "senderName": "Dentora Dental Care"
+          "appendAttribution": false
         }
       },
       "type": "n8n-nodes-base.gmail",
@@ -51,8 +50,7 @@
         "emailType": "html",
         "message": "={{ $('Validate and prepare emails').first().json.patientHtml }}",
         "options": {
-          "appendAttribution": false,
-          "senderName": "Dentora Dental Care"
+          "appendAttribution": false
         }
       },
       "type": "n8n-nodes-base.gmail",
