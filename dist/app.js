@@ -1,16 +1,14 @@
 const $ = (selector, scope = document) => scope.querySelector(selector);
 const $$ = (selector, scope = document) => [...scope.querySelectorAll(selector)];
-const bookingDialog = $('#appointment-dialog');
 const contentDialog = $('#content-dialog');
-const bookingForm = $('#booking-form');
+const appointmentForm = $('#appointment-form');
 let lastTrigger = null;
-let preparedRequest = null;
 let toastTimeout;
 
 $('#year').textContent = new Date().getFullYear();
 const localToday = new Date();
 localToday.setMinutes(localToday.getMinutes() - localToday.getTimezoneOffset());
-bookingForm.elements.date.min = localToday.toISOString().slice(0, 10);
+appointmentForm.elements.date.min = localToday.toISOString().slice(0, 10);
 
 function notify(message) {
   clearTimeout(toastTimeout);
@@ -22,13 +20,12 @@ function notify(message) {
 function openBooking(service, trigger) {
   lastTrigger = trigger || document.activeElement;
   if (contentDialog.open) contentDialog.close();
-  if (service) bookingForm.elements.service.value = service;
-  $('#booking-intro').hidden = false;
-  $('#booking-success').hidden = true;
-  if (!bookingDialog.open) bookingDialog.showModal();
-  document.body.classList.add('modal-open');
-  bookingDialog.scrollTop = 0;
+  if (service) appointmentForm.elements.service.value = service;
   closeMenu();
+  setTimeout(() => {
+    $('#appointment').scrollIntoView({behavior:matchMedia('(prefers-reduced-motion: reduce)').matches ? 'instant' : 'smooth', block:'start'});
+    setTimeout(() => appointmentForm.elements.name.focus({preventScroll:true}), 550);
+  }, 40);
 }
 
 $$('[data-book]').forEach(button => button.addEventListener('click', () => openBooking(null, button)));
@@ -66,49 +63,47 @@ document.addEventListener('click', event => {
   if (!mobileNav.hidden && !mobileNav.contains(event.target) && !menuToggle.contains(event.target)) closeMenu();
 });
 
-bookingForm.addEventListener('submit', event => {
+appointmentForm.addEventListener('submit', async event => {
   event.preventDefault();
-  if (!bookingForm.reportValidity()) return;
-  const values = Object.fromEntries(new FormData(bookingForm));
-  if (values.date < bookingForm.elements.date.min) {
+  if (!appointmentForm.reportValidity()) return;
+  const values = Object.fromEntries(new FormData(appointmentForm));
+  if (values.company) return;
+  if (values.date < appointmentForm.elements.date.min) {
     notify('Please choose today or a future date.');
-    bookingForm.elements.date.focus();
+    appointmentForm.elements.date.focus();
     return;
   }
-  preparedRequest = values;
-  const dateText = new Intl.DateTimeFormat('en', {weekday:'short', day:'numeric', month:'long', year:'numeric'}).format(new Date(values.date + 'T12:00:00'));
-  const fields = [['Name', values.name], ['Email', values.email], ['Visit', values.service], ['Date', dateText], ['Time', values.time]];
-  const summary = $('#request-summary');
-  summary.replaceChildren();
-  fields.forEach(([label, value]) => {
-    const dt = document.createElement('dt');
-    const dd = document.createElement('dd');
-    dt.textContent = label;
-    dd.textContent = value;
-    summary.append(dt, dd);
-  });
-  $('#booking-intro').hidden = true;
-  $('#booking-success').hidden = false;
-  bookingDialog.scrollTop = 0;
-  $('#download-request').focus();
-});
-$('#edit-request').addEventListener('click', () => {
-  $('#booking-intro').hidden = false;
-  $('#booking-success').hidden = true;
-  bookingForm.elements.name.focus();
-});
-$('#download-request').addEventListener('click', () => {
-  if (!preparedRequest) return;
-  const r = preparedRequest;
-  const text = `DENTORA — VISIT REQUEST\n\nName: ${r.name}\nEmail: ${r.email}\nService: ${r.service}\nPreferred date: ${r.date}\nPreferred time: ${r.time}\n\nThis is a request from a design concept, not a confirmed appointment.\nNo details have been sent to a clinic. Share this request with your clinic to confirm availability.`;
-  const blob = new Blob([text], {type: 'text/plain;charset=utf-8'});
-  const url = URL.createObjectURL(blob);
-  const link = document.createElement('a');
-  link.href = url;
-  link.download = `dentora-visit-request-${r.date}.txt`;
-  link.click();
-  setTimeout(() => URL.revokeObjectURL(url), 1000);
-  notify('Your visit request has been downloaded.');
+  const webhookUrl = appointmentForm.dataset.webhookUrl.trim();
+  const status = $('#appointment-status');
+  const isLocalPreview = location.hostname === 'localhost' || location.hostname === '127.0.0.1';
+  const pointsToLocalN8n = /^http:\/\/(?:localhost|127\.0\.0\.1)(?::\d+)?(?:\/|$)/i.test(webhookUrl);
+  if (!webhookUrl || (pointsToLocalN8n && !isLocalPreview)) {
+    status.textContent = 'The email service is not connected yet, so your request was not sent. Please email the clinic directly.';
+    return;
+  }
+  const submitButton = appointmentForm.querySelector('button[type="submit"]');
+  submitButton.disabled = true;
+  status.textContent = 'Sending your appointment request…';
+  try {
+    const response = await fetch(webhookUrl, {
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({
+        name:values.name.trim(), email:values.email.trim(), phone:values.phone.trim(),
+        service:values.service, date:values.date, time:values.time,
+        message:values.message.trim()
+      })
+    });
+    const result = await response.json().catch(() => null);
+    if (!response.ok || result?.success === false) throw new Error('n8n rejected the request');
+    status.textContent = 'Request received. Check your inbox for an email confirmation; the clinic will contact you to confirm a time.';
+    appointmentForm.reset();
+    appointmentForm.elements.date.min = localToday.toISOString().slice(0, 10);
+  } catch {
+    status.textContent = 'The request could not be sent. Please contact the clinic directly or try again later.';
+  } finally {
+    submitButton.disabled = false;
+  }
 });
 
 const benefitTrack = $('#benefit-track');
@@ -124,24 +119,6 @@ function moveBenefits(direction) {
 }
 $('#benefit-prev').addEventListener('click', () => moveBenefits(-1));
 $('#benefit-next').addEventListener('click', () => moveBenefits(1));
-
-const stories = [
-  {name:'Sarah M.', kind:'A calmer first visit', image:'assets/patient.jpg', quote:'I finally felt like someone was listening. Every step was explained, and I left feeling so much more confident.'},
-  {name:'Alex R.', kind:'Care for the whole family', image:'assets/smile.jpg', quote:'A warm welcome and time for all our questions. It made a visit with the whole family feel much more manageable.'},
-  {name:'Jamie L.', kind:'A fresh start for my smile', image:'assets/patient.jpg', quote:'No pressure, just a clear conversation about my options. Having a plan helped me take that first step.'}
-];
-let storyIndex = 0;
-function changeStory(direction) {
-  storyIndex = (storyIndex + direction + stories.length) % stories.length;
-  const s = stories[storyIndex];
-  $('#story-avatar').src = s.image;
-  $('#story-person').textContent = s.name;
-  $('#story-kind').textContent = s.kind;
-  $('#stories-title').textContent = s.quote;
-  $('#story-count').textContent = `0${storyIndex + 1} / 03`;
-}
-$('#story-prev').addEventListener('click', () => changeStory(-1));
-$('#story-next').addEventListener('click', () => changeStory(1));
 
 const articles = [
   {category:'Your first visit',title:'A first visit that feels a little more familiar.',body:'<p>New places can bring new questions. A first appointment is a chance to meet the team, talk about your concerns, and understand what comes next.</p><h3>Start with a conversation.</h3><p>Bring any questions you want to ask, along with the information your clinic requests before the visit. Let the team know if anything about dental care makes you nervous, so they can discuss how to support your comfort.</p><h3>Leave with a clearer picture.</h3><p>Your dentist can explain what they find, discuss available options, and help you understand the next steps. Ask about timing, costs, and anything you would like explained again.</p>'},
@@ -162,21 +139,9 @@ $$('[data-article]').forEach(button => button.addEventListener('click', () => {
   showContent(article.category, article.title, article.body, button);
 }));
 $$('[data-info]').forEach(button => button.addEventListener('click', () => {
-  if (button.dataset.info === 'privacy') showContent('Your privacy', 'A little clarity about your details.', '<p>This website is a design concept. Visit-request details stay in the current browser session until you download them or close the page. They are not sent to a clinic.</p><p>The preview newsletter signup stores an email address in this browser only. There is no mailing-list service connected. Clear your browser site data to remove a saved preview signup.</p><p>Fonts may load from Google Fonts. No advertising or analytics scripts are included.</p>', button);
-  else showContent('Accessibility', 'A comfortable experience for everyone.', '<p>The page supports keyboard navigation, visible focus indicators, reduced motion preferences, and layouts that adapt to different screen sizes.</p><p>Dialog windows can be closed with Escape, and every form field has a visible label. If you need help planning a visit, please use your clinic’s direct contact details once they have been added to this concept.</p>', button);
+  if (button.dataset.info === 'privacy') showContent('Your privacy', 'A little clarity about your details.', '<p>Appointment details are sent to the clinic only when the email workflow is connected. The clinic uses them to respond to your request. The appointment is not confirmed until the clinic contacts you.</p><p>No WhatsApp messages are sent by this form. Fonts may load from Google Fonts; no advertising or analytics scripts are included.</p>', button);
+  else showContent('Accessibility', 'A comfortable experience for everyone.', '<p>The page supports keyboard navigation, visible focus indicators, reduced motion preferences, and layouts that adapt to different screen sizes.</p><p>Dialog windows can be closed with Escape, and every form field has a visible label. For appointment help, use the form or email the clinic.</p>', button);
 }));
-$('#newsletter-form').addEventListener('submit', event => {
-  event.preventDefault();
-  const emailInput = $('#newsletter-email');
-  if (!emailInput.reportValidity()) return;
-  try {
-    localStorage.setItem('dentora-preview-newsletter', emailInput.value.trim());
-    notify('Preview signup saved on this device. No email has been sent.');
-    event.target.reset();
-  } catch {
-    notify('This browser cannot save the preview signup. No email has been sent.');
-  }
-});
 
 if ('IntersectionObserver' in window) {
   const navObserver = new IntersectionObserver(entries => {
@@ -186,5 +151,5 @@ if ('IntersectionObserver' in window) {
       }
     });
   }, {rootMargin:'-10% 0px -65% 0px'});
-  $$('#home, #about, #services, #stories, #contact').forEach(section => navObserver.observe(section));
+  $$('#home, #about, #services, #appointment').forEach(section => navObserver.observe(section));
 }

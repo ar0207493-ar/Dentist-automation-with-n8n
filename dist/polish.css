@@ -1,0 +1,66 @@
+/* Clear layout and appointment form updates. */
+.hero-shell { max-width:100%; }
+html { scroll-behavior:smooth; scroll-padding-top:88px; }
+.site-header { position:sticky; top:0; z-index:50; width:100%; padding:12px clamp(18px,4vw,54px); color:#fff; background:rgba(33,72,75,.97); box-shadow:0 1px 0 #ffffff20; backdrop-filter:blur(14px); }
+.mobile-nav:not([hidden]) { position:fixed; z-index:49; top:74px; left:16px; right:16px; }
+.care-journey { display:none; }
+.about-top { grid-template-columns:1fr; }
+.about-top h2 { max-width:850px; }
+.metrics>.small-label { justify-content:flex-start; }
+.metric-grid strong { font-size:clamp(22px,2.7vw,36px); letter-spacing:-.04em; }
+.metric-grid p { font-size:11px; }
+.sample-tag,.story-profile,.story-content { display:none!important; }
+.appointment-section { display:grid; grid-template-columns:minmax(230px,.78fr) minmax(0,1.22fr); gap:clamp(35px,8vw,110px); align-items:start; padding-top:82px; padding-bottom:84px; scroll-margin-top:88px; }
+.appointment-copy { position:sticky; top:30px; }
+.appointment-copy .section-label { margin-bottom:19px; }
+.appointment-copy h2 { font-size:clamp(34px,4vw,54px); line-height:1.12; }
+.appointment-copy>p:not(.section-label) { max-width:340px; margin-top:19px; color:#6b7471; font-size:14px; }
+.appointment-copy>a { display:inline-flex; margin-top:22px; color:#237e86; font-size:12px; font-weight:600; }
+.appointment-page-form { padding:30px; background:#fff; border:1px solid #e3e8e6; border-radius:12px; }
+.appointment-fields { display:grid; grid-template-columns:1fr 1fr; gap:17px 14px; }
+.appointment-fields label { display:grid; gap:7px; color:#394341; font-size:11px; font-weight:600; }
+.appointment-fields label>span { display:inline; color:#89918e; font-weight:400; }
+.appointment-fields input,.appointment-fields select,.appointment-fields textarea { width:100%; min-width:0; padding:11px 12px; border:1px solid #dfe5e3; border-radius:6px; background:#fff; color:#202727; font-size:13px; }
+.appointment-fields textarea { min-height:84px; resize:vertical; }
+.appointment-fields input:focus,.appointment-fields select:focus,.appointment-fields textarea:focus { outline:2px solid #39b2bf; outline-offset:1px; }
+.appointment-message { grid-column:1/-1; }
+.appointment-fields .whatsapp-consent { grid-column:1/-1; display:flex; align-items:flex-start; gap:10px; color:#56615e; font-weight:400; line-height:1.55; }
+.whatsapp-consent input[type="checkbox"] { flex:none; width:16px; height:16px; margin:1px 0 0; accent-color:#238e9a; }
+.form-trap { position:absolute!important; width:1px!important; height:1px!important; overflow:hidden!important; clip:rect(0,0,0,0)!important; white-space:nowrap!important; }
+.appointment-submit-row { display:flex; justify-content:space-between; align-items:center; gap:22px; margin-top:22px; }
+.appointment-submit-row>p { max-width:330px; color:#747c7a; font-size:10px; line-height:1.55; }
+.appointment-submit-row .button { flex:none; }
+.appointment-status { min-height:20px; margin-top:12px; color:#237e86; font-size:11px; }
+.footer-top { align-items:center; }
+.footer-email-link { color:#d5e8e6; font-size:13px; }
+.button { transition:background-color .2s ease,color .2s ease,border-color .2s ease; }
+.button:hover { transform:none; box-shadow:none; }
+:is(button,a,[role="button"]):hover { transform:none!important; translate:none!important; }
+.button-white:hover { background:#39b2bf; color:#fff; }
+.button-dark:hover { background:#39b2bf; color:#fff; }
+.button-teal:hover { background:#21484b; color:#fff; }
+.benefit-track { scroll-snap-type:x mandatory; scroll-behavior:smooth; }
+.benefit-track>article { scroll-snap-align:start; }
+.slider-controls .icon-button:hover { background:#39b2bf; color:#fff; }
+
+@media(max-width:800px) {
+  .site-header { padding:11px 20px; }
+  .mobile-nav:not([hidden]) { top:67px; }
+  .appointment-section { grid-template-columns:1fr; gap:27px; padding-top:60px; padding-bottom:60px; }
+  .appointment-copy { position:static; }
+  .appointment-copy h2 { font-size:clamp(32px,7vw,44px); }
+  .appointment-page-form { padding:24px; }
+  .footer-top { display:flex; gap:25px; flex-wrap:wrap; }
+}
+@media(max-width:560px) {
+  .appointment-section { padding-top:48px; padding-bottom:48px; }
+  .appointment-page-form { padding:18px; }
+  .appointment-fields { grid-template-columns:1fr; gap:13px; }
+  .appointment-message { grid-column:auto; }
+  .appointment-fields .whatsapp-consent { grid-column:auto; }
+  .appointment-submit-row { align-items:stretch; flex-direction:column; gap:13px; }
+  .appointment-submit-row .button { width:100%; }
+}
+@media(prefers-reduced-motion:reduce) {
+  html,.benefit-track { scroll-behavior:auto; }
+}

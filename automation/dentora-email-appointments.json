@@ -1,0 +1,102 @@
+{
+  "name": "Dentora — Appointment Email Notifications",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "dentora-appointment",
+        "responseMode": "responseNode",
+        "options": {
+          "allowedOrigins": "*"
+        }
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2.1,
+      "position": [240, 300],
+      "id": "4f408250-e8b2-4d76-9311-94e31a893d47",
+      "name": "Appointment form webhook",
+      "webhookId": "dentora-appointment"
+    },
+    {
+      "parameters": {
+        "jsCode": "const incoming = $input.first().json;\nlet data = incoming.body ?? incoming;\nif (typeof data === 'string') {\n  try { data = JSON.parse(data); } catch { throw new Error('Request body must be valid JSON'); }\n}\nconst clean = value => String(value ?? '').trim();\nconst escapeHtml = value => clean(value).replace(/[&<>\\\"']/g, char => ({'&':'&amp;','<':'&lt;','>':'&gt;','\\\"':'&quot;',\"'\":'&#39;'}[char]));\nconst name = clean(data.name).slice(0, 100);\nconst email = clean(data.email).slice(0, 254).toLowerCase();\nconst phone = clean(data.phone).slice(0, 25);\nconst service = clean(data.service).slice(0, 100);\nconst date = clean(data.date).slice(0, 10);\nconst time = clean(data.time).slice(0, 60);\nconst note = clean(data.message).slice(0, 500);\nif (clean(data.company)) throw new Error('Invalid form submission');\nif (!name || !/^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$/.test(email) || !phone || !/^\\d{4}-\\d{2}-\\d{2}$/.test(date) || !service || !time) {\n  throw new Error('Please provide a valid name, email, phone, service, date, and time');\n}\nconst safeName = escapeHtml(name);\nconst safeEmail = escapeHtml(email);\nconst safePhone = escapeHtml(phone);\nconst safeService = escapeHtml(service);\nconst safeDate = escapeHtml(date);\nconst safeTime = escapeHtml(time);\nconst safeNote = escapeHtml(note).replace(/\\r?\\n/g, '<br>') || 'No additional note';\nconst details = `<table role=\"presentation\" style=\"width:100%;border-collapse:collapse\"><tr><td style=\"padding:10px;border-bottom:1px solid #e6e8eb\"><b>Name</b></td><td style=\"padding:10px;border-bottom:1px solid #e6e8eb\">${safeName}</td></tr><tr><td style=\"padding:10px;border-bottom:1px solid #e6e8eb\"><b>Email</b></td><td style=\"padding:10px;border-bottom:1px solid #e6e8eb\">${safeEmail}</td></tr><tr><td style=\"padding:10px;border-bottom:1px solid #e6e8eb\"><b>Phone</b></td><td style=\"padding:10px;border-bottom:1px solid #e6e8eb\">${safePhone}</td></tr><tr><td style=\"padding:10px;border-bottom:1px solid #e6e8eb\"><b>Requested service</b></td><td style=\"padding:10px;border-bottom:1px solid #e6e8eb\">${safeService}</td></tr><tr><td style=\"padding:10px;border-bottom:1px solid #e6e8eb\"><b>Preferred date</b></td><td style=\"padding:10px;border-bottom:1px solid #e6e8eb\">${safeDate}</td></tr><tr><td style=\"padding:10px;border-bottom:1px solid #e6e8eb\"><b>Preferred time</b></td><td style=\"padding:10px;border-bottom:1px solid #e6e8eb\">${safeTime}</td></tr><tr><td style=\"padding:10px\"><b>Note</b></td><td style=\"padding:10px\">${safeNote}</td></tr></table>`;\nconst shell = body => `<div style=\"font-family:Arial,sans-serif;color:#263638;line-height:1.6;max-width:620px;margin:0 auto;padding:28px\"><div style=\"font-size:23px;font-weight:700;color:#176a65;margin-bottom:20px\">Dentora</div>${body}<p style=\"margin-top:28px;color:#697778;font-size:13px\">Dentora Dental Care · Please reply to this email if you have any questions.</p></div>`;\nconst adminHtml = shell(`<h2 style=\"font-size:21px\">New appointment request</h2><p>A patient has sent an appointment request. Please contact them to confirm availability.</p>${details}`);\nconst patientHtml = shell(`<h2 style=\"font-size:21px\">We received your request, ${safeName}.</h2><p>Thank you for contacting Dentora. Your appointment request is with our team. This email confirms receipt only; your appointment is not booked until the clinic confirms a time with you.</p><h3 style=\"font-size:16px\">Your requested visit</h3>${details}<p>Our team will follow up using the contact details you provided.</p>`);\nreturn [{ json: { name, email, phone, service, date, time, message: note, adminHtml, patientHtml } }];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [480, 300],
+      "id": "6ef74ed2-cbcb-49fb-908e-a112633dd3f5",
+      "name": "Validate and prepare emails"
+    },
+    {
+      "parameters": {
+        "sendTo": "ar0207493@gmail.com",
+        "subject": "={{ 'New appointment request — ' + $json.name }}",
+        "emailType": "html",
+        "message": "={{ $json.adminHtml }}",
+        "options": {
+          "appendAttribution": false,
+          "senderName": "Dentora Dental Care"
+        }
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.1,
+      "position": [740, 300],
+      "id": "40d49cf2-5eba-42fd-9a0e-033db9580c21",
+      "name": "Email clinic with request"
+    },
+    {
+      "parameters": {
+        "sendTo": "={{ $('Validate and prepare emails').first().json.email }}",
+        "subject": "We received your appointment request | Dentora",
+        "emailType": "html",
+        "message": "={{ $('Validate and prepare emails').first().json.patientHtml }}",
+        "options": {
+          "appendAttribution": false,
+          "senderName": "Dentora Dental Care"
+        }
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.1,
+      "position": [1000, 300],
+      "id": "54c5294f-8f2d-48fd-a55b-167b34e5dd9e",
+      "name": "Confirm receipt to patient"
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ { success: true, message: 'Request received. Please check your email for confirmation.' } }}",
+        "options": {
+          "responseCode": 200
+        }
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.4,
+      "position": [1260, 300],
+      "id": "a4ad42a6-9466-44b1-9a63-4cb3d33165bd",
+      "name": "Confirm form submission"
+    }
+  ],
+  "connections": {
+    "Appointment form webhook": {
+      "main": [[{ "node": "Validate and prepare emails", "type": "main", "index": 0 }]]
+    },
+    "Validate and prepare emails": {
+      "main": [[{ "node": "Email clinic with request", "type": "main", "index": 0 }]]
+    },
+    "Email clinic with request": {
+      "main": [[{ "node": "Confirm receipt to patient", "type": "main", "index": 0 }]]
+    },
+    "Confirm receipt to patient": {
+      "main": [[{ "node": "Confirm form submission", "type": "main", "index": 0 }]]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "1",
+  "meta": {
+    "templateCredsSetupCompleted": false
+  },
+  "tags": []
+}

@@ -103,10 +103,6 @@
       x: 0, opacity: 1, duration: 0.8, stagger: 0.09, ease: 'power3.out',
       scrollTrigger: {trigger: '.benefit-track', start: 'top 88%', once: true}
     });
-    gsap.fromTo('.story-profile, .story-content', {y: 22, opacity: 0}, {
-      y: 0, opacity: 1, duration: 0.9, stagger: 0.1, ease: 'power3.out',
-      scrollTrigger: {trigger: '.story-layout', start: 'top 88%', once: true}
-    });
     if (matchMedia('(min-width: 801px)').matches) {
       gsap.to('.hero-video, .hero-poster', {
         yPercent: 9, ease: 'none',
