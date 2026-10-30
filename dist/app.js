@@ -2,6 +2,10 @@ const $ = (selector, scope = document) => scope.querySelector(selector);
 const $$ = (selector, scope = document) => [...scope.querySelectorAll(selector)];
 const contentDialog = $('#content-dialog');
 const appointmentForm = $('#appointment-form');
+const bookingDialog = $('#booking-dialog');
+const successDialog = $('#success-dialog');
+const formHome = document.createComment('Appointment form home');
+appointmentForm.before(formHome);
 let lastTrigger = null;
 let toastTimeout;
 
@@ -26,10 +30,12 @@ function openBooking(service, trigger) {
   if (contentDialog.open) contentDialog.close();
   if (service) appointmentForm.elements.service.value = service;
   closeMenu();
-  setTimeout(() => {
-    $('#appointment').scrollIntoView({behavior:matchMedia('(prefers-reduced-motion: reduce)').matches ? 'instant' : 'smooth', block:'start'});
-    setTimeout(() => appointmentForm.elements.name.focus({preventScroll:true}), 550);
-  }, 40);
+  if (successDialog.open) successDialog.close();
+  $('#booking-form-slot').append(appointmentForm);
+  if (!bookingDialog.open) bookingDialog.showModal();
+  document.body.classList.add('modal-open');
+  bookingDialog.dispatchEvent(new Event('booking:open'));
+  appointmentForm.elements.name.focus({preventScroll:true});
 }
 
 $$('[data-book]').forEach(button => button.addEventListener('click', () => openBooking(null, button)));
@@ -41,12 +47,15 @@ $$('dialog').forEach(dialog => {
     if (event.target === dialog && (event.clientX < box.left || event.clientX > box.right || event.clientY < box.top || event.clientY > box.bottom)) dialog.close();
   });
   dialog.addEventListener('close', () => {
+    if (dialog === bookingDialog) formHome.after(appointmentForm);
     if (!$$('dialog[open]').length) {
       document.body.classList.remove('modal-open');
       lastTrigger?.focus({preventScroll: true});
     }
   });
 });
+$$('[data-close-booking]').forEach(link => link.addEventListener('click', () => bookingDialog.close()));
+$('#success-done').addEventListener('click', () => successDialog.close());
 
 const menuToggle = $('.menu-toggle');
 const mobileNav = $('#mobile-nav');
@@ -79,9 +88,11 @@ appointmentForm.addEventListener('submit', async event => {
   }
   const webhookUrl = appointmentForm.dataset.webhookUrl.trim();
   const status = $('#appointment-status');
+  status.dataset.state = 'sending';
   const isLocalPreview = location.hostname === 'localhost' || location.hostname === '127.0.0.1';
   const pointsToLocalN8n = /^http:\/\/(?:localhost|127\.0\.0\.1)(?::\d+)?(?:\/|$)/i.test(webhookUrl);
   if (!webhookUrl || (pointsToLocalN8n && !isLocalPreview)) {
+    status.dataset.state = 'error';
     status.textContent = 'The email service is not connected yet, so your request was not sent. Please email the clinic directly.';
     return;
   }
@@ -108,9 +119,21 @@ appointmentForm.addEventListener('submit', async event => {
     status.textContent = result.whatsapp?.patientAccepted === false
       ? 'Your request was received and emailed. The WhatsApp update could not be sent; the clinic will follow up by email.'
       : 'Request received. Check your email and WhatsApp; the clinic will contact you to confirm a time.';
+    status.dataset.state = 'success';
+    $('#success-message').textContent = 'Thank you, ' + values.name.trim() + '. Your appointment request has been received. A receipt has been sent to:';
+    $('#success-email').textContent = values.email.trim();
+    $('#success-whatsapp').textContent = result.whatsapp?.patientAccepted === true
+      ? 'An appointment update has also been sent to your WhatsApp number.'
+      : result.whatsapp?.patientAccepted === false
+        ? 'The WhatsApp update could not be sent. Please use your email receipt for now.'
+        : '';
+    if (bookingDialog.open) bookingDialog.close();
+    successDialog.showModal();
+    document.body.classList.add('modal-open');
     appointmentForm.reset();
     appointmentForm.elements.date.min = localToday.toISOString().slice(0, 10);
   } catch (error) {
+    status.dataset.state = 'error';
     status.textContent = error.serviceRestarting
       ? 'The booking service is restarting. Please try again in a few minutes or email ar0207493@gmail.com.'
       : 'We could not confirm that your request finished. Please email the clinic before submitting again.';
@@ -164,6 +187,6 @@ if ('IntersectionObserver' in window) {
       }
     });
   }, {rootMargin:'-10% 0px -65% 0px'});
-  $$('#home, #about, #services, #appointment').forEach(section => navObserver.observe(section));
+  $$('#home, #about, #services, #insights, #appointment').forEach(section => navObserver.observe(section));
 }
 

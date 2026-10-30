@@ -10,7 +10,7 @@
 
 ## Animation
 
-GSAP 3.15.0 and ScrollTrigger, downloaded from the official GSAP npm distribution via jsDelivr and hosted locally. Their original license headers are retained in `dist/assets/vendor/`. Documentation and licensing: https://gsap.com/docs/v3/Installation/ and https://gsap.com/standard-license/
+GSAP 3.15.0, ScrollTrigger and SplitText, downloaded from the official GSAP npm distribution via jsDelivr and hosted locally. Their original license headers are retained in `dist/assets/vendor/`. Documentation and licensing: https://gsap.com/docs/v3/Installation/ and https://gsap.com/standard-license/
 
 ## Photographs
 
