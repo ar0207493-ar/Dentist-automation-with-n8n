@@ -49,13 +49,6 @@
             scrollTrigger:{trigger:heading,start:'top 92%',once:true}
           });
         });
-        // Firework Burst resolves to scale 1; the supplied demo ended at 0.
-        const wordmark = document.querySelector('.footer-name');
-        const firework = SplitText.create(wordmark, {type:'chars',charsClass:'footer-char',aria:'none'});
-        splits.push(firework);
-        gsap.fromTo(firework.chars,{scale:3,opacity:0},{scale:1,opacity:1,
-          stagger:{each:.03,from:'center'},duration:.6,ease:'power4.out',
-          scrollTrigger:{trigger:wordmark,start:'top 95%',once:true}});
       }
       // Reveal Wipe for supporting copy, separated from headings and controls.
       document.querySelectorAll('.hero-description,.about-intro p,.section-heading>p:not(.section-label),.doctor-copy>p,.benefit-teal p,.benefit-simple p,.appointment-copy>p:not(.section-label)').forEach(copy => {

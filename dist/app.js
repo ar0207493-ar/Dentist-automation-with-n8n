@@ -10,10 +10,6 @@ let lastTrigger = null;
 let toastTimeout;
 
 $('#year').textContent = new Date().getFullYear();
-const siteHeader = $('.site-header');
-const updateHeaderState = () => siteHeader.classList.toggle('is-stuck', window.scrollY > 40);
-updateHeaderState();
-window.addEventListener('scroll', updateHeaderState, {passive:true});
 const localToday = new Date();
 localToday.setMinutes(localToday.getMinutes() - localToday.getTimezoneOffset());
 appointmentForm.elements.date.min = localToday.toISOString().slice(0, 10);
