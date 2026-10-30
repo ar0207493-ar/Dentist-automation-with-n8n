@@ -27,7 +27,7 @@
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        480,
+        500,
         300
       ],
       "id": "6ef74ed2-cbcb-49fb-908e-a112633dd3f5",
@@ -49,7 +49,7 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
       "position": [
-        740,
+        1020,
         300
       ],
       "id": "40d49cf2-5eba-42fd-9a0e-033db9580c21",
@@ -73,7 +73,7 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
       "position": [
-        1520,
+        1800,
         300
       ],
       "id": "54c5294f-8f2d-48fd-a55b-167b34e5dd9e",
@@ -84,15 +84,15 @@
     {
       "parameters": {
         "respondWith": "json",
-        "responseBody": "={{ { success: true, message: \"Request received. Please check your email for confirmation.\", whatsapp: { clinicAccepted: $json.clinicWhatsAppAccepted, patientAccepted: $json.patientWhatsAppAccepted, clinicError: $json.clinicWhatsAppError, patientError: $json.patientWhatsAppError }, aiReplyUsed: $(\"Prepare patient email reply\").first().json.aiReplyUsed } }}",
+        "responseBody": "={{ { success: true, status: \"accepted\", notifications: \"processing\", requestId: $execution.id, message: \"Your appointment request has been received. Your email receipt will arrive shortly.\" } }}",
         "options": {
-          "responseCode": 200
+          "responseCode": 202
         }
       },
       "type": "n8n-nodes-base.respondToWebhook",
       "typeVersion": 1.4,
       "position": [
-        3600,
+        760,
         300
       ],
       "id": "a4ad42a6-9466-44b1-9a63-4cb3d33165bd",
@@ -104,7 +104,7 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
       "position": [
-        1000,
+        1280,
         300
       ],
       "parameters": {
@@ -137,7 +137,7 @@
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        1260,
+        1540,
         300
       ],
       "parameters": {
@@ -151,7 +151,7 @@
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        1780,
+        2060,
         300
       ],
       "parameters": {
@@ -164,7 +164,7 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
       "position": [
-        2560,
+        2840,
         300
       ],
       "parameters": {
@@ -197,7 +197,7 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
       "position": [
-        3080,
+        3360,
         300
       ],
       "parameters": {
@@ -230,7 +230,7 @@
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        3340,
+        3620,
         300
       ],
       "parameters": {
@@ -243,7 +243,7 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
       "position": [
-        2040,
+        2320,
         300
       ],
       "parameters": {
@@ -279,7 +279,7 @@
         "jsCode": "const base = $('Prepare WhatsApp notifications').first().json;\nconst result = $input.first().json ?? {};\nconst id = result.data?.data?.numberId?._serialized || result.data?.numberId?._serialized || '';\nconst valid = /^[0-9]+@(c\\.us|lid)$/.test(id) && result.status === 'success' && result.data?.status !== 'error';\n// WaAPI trial accepts only its verified own-number alias, not that number's LID.\n// This exact account's verified trial recipient and admin number are the same.\nconst recipient = base.patientChatId === base.adminChatId ? base.adminChatId : id;\nreturn [{ json: { patientChatId: valid ? recipient : '', verified: valid } }];"
       },
       "position": [
-        2300,
+        2580,
         300
       ]
     },
@@ -294,7 +294,7 @@
         "unit": "seconds"
       },
       "position": [
-        2820,
+        3100,
         300
       ],
       "webhookId": "dentora-waapi-send-pause"
@@ -316,6 +316,17 @@
       "main": [
         [
           {
+            "node": "Confirm form submission",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Confirm form submission": {
+      "main": [
+        [
+          {
             "node": "Email clinic with request",
             "type": "main",
             "index": 0
@@ -328,17 +339,6 @@
         [
           {
             "node": "Draft a professional reply with Gemini",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Confirm receipt to patient": {
-      "main": [
-        [
-          {
-            "node": "Prepare WhatsApp notifications",
             "type": "main",
             "index": 0
           }
@@ -367,44 +367,22 @@
         ]
       ]
     },
+    "Confirm receipt to patient": {
+      "main": [
+        [
+          {
+            "node": "Prepare WhatsApp notifications",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
     "Prepare WhatsApp notifications": {
       "main": [
         [
           {
             "node": "Resolve patient WhatsApp ID",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "WhatsApp alert to clinic": {
-      "main": [
-        [
-          {
-            "node": "Pause between WhatsApp messages",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "WhatsApp receipt to patient": {
-      "main": [
-        [
-          {
-            "node": "Record WhatsApp send result",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Record WhatsApp send result": {
-      "main": [
-        [
-          {
-            "node": "Confirm form submission",
             "type": "main",
             "index": 0
           }
@@ -433,11 +411,33 @@
         ]
       ]
     },
+    "WhatsApp alert to clinic": {
+      "main": [
+        [
+          {
+            "node": "Pause between WhatsApp messages",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
     "Pause between WhatsApp messages": {
       "main": [
         [
           {
             "node": "WhatsApp receipt to patient",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "WhatsApp receipt to patient": {
+      "main": [
+        [
+          {
+            "node": "Record WhatsApp send result",
             "type": "main",
             "index": 0
           }

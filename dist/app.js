@@ -8,6 +8,8 @@ const formHome = document.createComment('Appointment form home');
 appointmentForm.before(formHome);
 let lastTrigger = null;
 let toastTimeout;
+let appointmentSending = false;
+let receiptDismissed = false;
 
 $('#year').textContent = new Date().getFullYear();
 const localToday = new Date();
@@ -52,6 +54,33 @@ $$('dialog').forEach(dialog => {
 });
 $$('[data-close-booking]').forEach(link => link.addEventListener('click', () => bookingDialog.close()));
 $('#success-done').addEventListener('click', () => successDialog.close());
+successDialog.addEventListener('close', () => { if (appointmentSending) receiptDismissed = true; });
+
+function showRequestReceipt(state, values, result = {}) {
+  const processing = result.status === 'accepted' || result.notifications === 'processing';
+  successDialog.dataset.state = state;
+  $('.success-symbol use').setAttribute('href', state === 'pending' ? '#mail' : state === 'error' ? '#close' : '#check');
+  $('#success-title').textContent = state === 'pending' ? 'Sending your request…' : state === 'error' ? 'Please check your request.' : 'Request received.';
+  $('#success-message').textContent = state === 'pending'
+    ? 'We are contacting the clinic’s booking service. Please wait for confirmation that your details have been received.'
+    : state === 'error'
+      ? 'We could not confirm whether your request finished. Your details are still in the form.'
+      : 'Thank you, ' + values.name.trim() + '. Your appointment request has been received. ' + (processing ? 'Your receipt will be emailed to:' : 'A receipt has been sent to:');
+  $('#success-email').textContent = values.email.trim();
+  $('.success-next').textContent = state === 'pending'
+    ? 'Please keep this page open until your request is received. Once received, email processing continues even if you leave the page.'
+    : state === 'error'
+      ? 'Please email ar0207493@gmail.com before submitting again, so the clinic can check for a duplicate request.'
+      : (processing ? 'Your receipt will arrive shortly. ' : '') + 'Please check your Gmail or email inbox, including Spam. Our team will contact you to confirm availability and a time.';
+  $('#success-whatsapp').textContent = state !== 'accepted' ? '' : result.whatsapp?.patientAccepted === true
+    ? 'An appointment update has also been sent to your WhatsApp number.'
+    : result.whatsapp?.patientAccepted === false ? 'The WhatsApp update could not be sent. Please use your email receipt for now.' : '';
+  if (!receiptDismissed) {
+    if (bookingDialog.open) bookingDialog.close();
+    if (!successDialog.open) successDialog.showModal();
+    document.body.classList.add('modal-open');
+  }
+}
 
 const menuToggle = $('.menu-toggle');
 const mobileNav = $('#mobile-nav');
@@ -74,6 +103,7 @@ document.addEventListener('click', event => {
 
 appointmentForm.addEventListener('submit', async event => {
   event.preventDefault();
+  if (appointmentSending) return;
   if (!appointmentForm.reportValidity()) return;
   const values = Object.fromEntries(new FormData(appointmentForm));
   if (values.company) return;
@@ -93,11 +123,17 @@ appointmentForm.addEventListener('submit', async event => {
     return;
   }
   const submitButton = appointmentForm.querySelector('button[type="submit"]');
+  appointmentSending = true;
+  receiptDismissed = false;
+  appointmentForm.inert = true;
   submitButton.disabled = true;
   status.textContent = 'Sending your appointment request…';
+  const started = Date.now();
+  const pendingPopup = setTimeout(() => showRequestReceipt('pending', values), 1000);
   try {
     const response = await fetch(webhookUrl, {
       method:'POST',
+      keepalive:true,
       headers:{'Content-Type':'application/json'},
       body:JSON.stringify({
         name:values.name.trim(), email:values.email.trim(), phone:values.phone.trim(),
@@ -112,28 +148,31 @@ appointmentForm.addEventListener('submit', async event => {
       issue.serviceRestarting = [502, 503, 504].includes(response.status);
       throw issue;
     }
-    status.textContent = result.whatsapp?.patientAccepted === false
+    clearTimeout(pendingPopup);
+    const remaining = 1000 - (Date.now() - started);
+    if (remaining > 0) await new Promise(resolve => setTimeout(resolve, remaining));
+    const processing = result.status === 'accepted' || result.notifications === 'processing';
+    status.textContent = processing
+      ? 'Request received. Your email receipt will arrive shortly; you can leave this page.'
+      : result.whatsapp?.patientAccepted === false
       ? 'Your request was received and emailed. The WhatsApp update could not be sent; the clinic will follow up by email.'
       : 'Request received. Check your email and WhatsApp; the clinic will contact you to confirm a time.';
     status.dataset.state = 'success';
-    $('#success-message').textContent = 'Thank you, ' + values.name.trim() + '. Your appointment request has been received. A receipt has been sent to:';
-    $('#success-email').textContent = values.email.trim();
-    $('#success-whatsapp').textContent = result.whatsapp?.patientAccepted === true
-      ? 'An appointment update has also been sent to your WhatsApp number.'
-      : result.whatsapp?.patientAccepted === false
-        ? 'The WhatsApp update could not be sent. Please use your email receipt for now.'
-        : '';
-    if (bookingDialog.open) bookingDialog.close();
-    successDialog.showModal();
-    document.body.classList.add('modal-open');
+    showRequestReceipt('accepted', values, result);
+    if (receiptDismissed) notify(status.textContent);
     appointmentForm.reset();
     appointmentForm.elements.date.min = localToday.toISOString().slice(0, 10);
   } catch (error) {
+    clearTimeout(pendingPopup);
     status.dataset.state = 'error';
     status.textContent = error.serviceRestarting
       ? 'The booking service is restarting. Please try again in a few minutes or email ar0207493@gmail.com.'
       : 'We could not confirm that your request finished. Please email the clinic before submitting again.';
+    if (successDialog.open && successDialog.dataset.state === 'pending') showRequestReceipt('error', values);
   } finally {
+    clearTimeout(pendingPopup);
+    appointmentSending = false;
+    appointmentForm.inert = false;
     submitButton.disabled = false;
   }
 });
