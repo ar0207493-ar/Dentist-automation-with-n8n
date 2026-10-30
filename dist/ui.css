@@ -42,3 +42,22 @@ html{scroll-padding-top:28px}.appointment-section{scroll-margin-top:28px}.footer
 .hero{height:calc(100svh - 28px);min-height:760px}
 .hero-shell + .about{padding-top:48px}
 @media(max-width:560px){.hero{height:calc(100svh - 16px);min-height:740px;max-height:none}.hero-shell + .about{padding-top:32px}}
+
+/* One shared action-button style, matching the appointment CTA. */
+.button.button-white,.button.button-teal,.button.button-dark{background:var(--teal);color:#fff;border:1px solid transparent;border-radius:999px;min-height:49px;padding:8px 8px 8px 22px;gap:24px;box-shadow:none}
+.button:is(.button-white,.button-teal,.button-dark):hover{background:var(--dark);color:#fff;border-color:transparent;transform:none;box-shadow:none}
+.button .circle-arrow,.button:is(.button-white,.button-teal,.button-dark):hover .circle-arrow{background:#fff;color:var(--teal-dark);width:32px;height:32px;flex:none;border-radius:50%;display:grid;place-items:center}
+.button .circle-arrow svg{display:block;width:16px;height:16px;transform:none}
+.button:disabled{opacity:.65}
+.site-header .header-book{padding:6px 6px 6px 17px;gap:18px;min-height:44px;font-size:11px}
+.service-pills button,.service-pills button:first-child{display:inline-flex;align-items:center;gap:10px;padding:5px 5px 5px 12px;border:1px solid transparent;background:var(--teal);color:#fff}
+.service-pills button:hover,.service-pills button:first-child:hover{background:var(--dark);border-color:transparent;color:#fff}
+.service-pills button .circle-arrow{margin:0;width:23px;height:23px;background:#fff;color:var(--teal-dark)}
+.service-pills button .circle-arrow svg{width:13px;height:13px}
+.article-card .text-link{display:inline-flex;align-items:center;gap:18px;background:var(--teal);color:#fff;border-radius:999px;padding:5px 5px 5px 14px;transition:background-color .25s}
+.article-card .text-link .circle-arrow{width:26px;height:26px;background:#fff;color:var(--teal-dark);transform:none!important}
+.article-card .text-link svg{width:14px;height:14px;transform:none}
+.article-card:hover .text-link{background:var(--dark)}
+.treatment .treatment-arrow{background:var(--teal);border-color:var(--teal);color:#fff;transition:background-color .25s,border-color .25s}
+.treatment:hover .treatment-arrow{background:var(--dark);border-color:var(--dark)}
+@media(max-width:560px){.site-header .header-book{padding:4px 4px 4px 12px;min-height:36px;gap:9px;font-size:10px}.site-header .header-book .circle-arrow{width:26px;height:26px}.site-header .header-book .circle-arrow svg{display:block;width:14px;height:14px}}
