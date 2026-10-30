@@ -77,14 +77,14 @@
         <div class="appointment-fields">
           <label>Your name<input name="name" autocomplete="name" placeholder="Full name" required maxlength="100"></label>
           <label>Email address<input name="email" type="email" autocomplete="email" placeholder="you@example.com" required></label>
-          <label>Phone number<input name="phone" type="tel" autocomplete="tel" inputmode="tel" placeholder="+92 3XX XXXXXXX" pattern="[+0-9()\s-]{7,25}" maxlength="25" required></label>
+          <label>WhatsApp number<input name="phone" type="tel" autocomplete="tel" inputmode="tel" placeholder="+92 3XX XXXXXXX" pattern="[+0-9()\s-]{7,25}" maxlength="25" required></label>
           <label>What do you need?<select name="service"><option>Dental checkup</option><option>Teeth cleaning</option><option>Restorative care</option><option>Cosmetic consultation</option><option>Family appointment</option><option>I'm not sure yet</option></select></label>
           <label>Preferred date<input name="date" type="date" required></label>
           <label>Preferred time<select name="time"><option>Morning · 9 am–12 pm</option><option>Afternoon · 12–4 pm</option><option>Evening · 4–6 pm</option></select></label>
           <label class="appointment-message">Anything we should know? <span>(optional)</span><textarea name="message" rows="3" maxlength="500" placeholder="Add a short note"></textarea></label>
         </div>
         <label class="form-trap" aria-hidden="true">Leave this field empty<input name="company" tabindex="-1" autocomplete="off"></label>
-        <div class="appointment-submit-row"><p>We’ll email you to confirm we received your request. If you add a note, Google Gemini helps draft a courteous acknowledgement; it does not give dental advice. The clinic will contact you to confirm an appointment time.</p><button class="button button-dark arrow-button" type="submit">Send appointment request <span class="circle-arrow"><svg><use href="#arrow"/></svg></span></button></div>
+        <div class="appointment-submit-row"><p>By sending this request, you agree to receive appointment updates from Dentora by email and WhatsApp. Our team will contact you to confirm a time.</p><button class="button button-dark arrow-button" type="submit">Send appointment request <span class="circle-arrow"><svg><use href="#arrow"/></svg></span></button></div>
         <p class="appointment-status" id="appointment-status" role="status" aria-live="polite"></p>
       </form>
     </section>

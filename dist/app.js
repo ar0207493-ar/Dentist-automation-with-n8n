@@ -95,7 +95,8 @@ appointmentForm.addEventListener('submit', async event => {
       body:JSON.stringify({
         name:values.name.trim(), email:values.email.trim(), phone:values.phone.trim(),
         service:values.service, date:values.date, time:values.time,
-        message:values.message.trim()
+        message:values.message.trim(),
+        contactConsent:{appointmentUpdates:true,noticeVersion:'2026-10-30',source:'appointment-form-submit'}
       })
     });
     const result = await response.json().catch(() => null);
@@ -143,7 +144,7 @@ $$('[data-article]').forEach(button => button.addEventListener('click', () => {
   showContent(article.category, article.title, article.body, button);
 }));
 $$('[data-info]').forEach(button => button.addEventListener('click', () => {
-  if (button.dataset.info === 'privacy') showContent('Your privacy', 'A little clarity about your details.', '<p>Appointment details are sent to the clinic to respond to your request. If you include a note, its text is also sent to Google Gemini to draft a brief, courteous acknowledgement. Your name, email, and phone are not sent to Gemini. The AI reply is not dental advice or a clinical review, and your appointment is not confirmed until the clinic contacts you.</p><p>No WhatsApp messages are sent by this form. Fonts may load from Google Fonts; no advertising or analytics scripts are included.</p>', button);
+  if (button.dataset.info === 'privacy') showContent('Your privacy', 'A little clarity about your details.', '<p>Appointment details are sent to the clinic to respond to your request. We use Gmail for email and WaAPI to send appointment updates to the WhatsApp number you provide. WaAPI processes the recipient number and message content. To stop updates, contact ar0207493@gmail.com.</p><p>If you include a note, its text is sent to Google Gemini to draft a brief, courteous acknowledgement. Separate name, email and phone fields are not included in the Gemini request. The reply is not dental advice or a clinical review. Your appointment is confirmed only when the clinic agrees a time with you.</p><p>Fonts may load from Google Fonts; no advertising or analytics scripts are included.</p>', button);
   else showContent('Accessibility', 'A comfortable experience for everyone.', '<p>The page supports keyboard navigation, visible focus indicators, reduced motion preferences, and layouts that adapt to different screen sizes.</p><p>Dialog windows can be closed with Escape, and every form field has a visible label. For appointment help, use the form or email the clinic.</p>', button);
 }));
 

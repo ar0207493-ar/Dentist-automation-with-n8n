@@ -1,5 +1,5 @@
 {
-  "name": "Dentora — Appointment Email Notifications",
+  "name": "Dentora — Appointment Email and WhatsApp Notifications",
   "nodes": [
     {
       "parameters": {
@@ -22,7 +22,7 @@
     },
     {
       "parameters": {
-        "jsCode": "const incoming = $input.first().json;\nlet data = incoming.body ?? incoming;\nif (typeof data === 'string') {\n  try { data = JSON.parse(data); } catch { throw new Error('Request body must be valid JSON'); }\n}\nconst clean = value => String(value ?? '').trim();\nconst escapeHtml = value => clean(value).replace(/[&<>\\\"']/g, char => ({'&':'&amp;','<':'&lt;','>':'&gt;','\\\"':'&quot;',\"'\":'&#39;'}[char]));\nconst name = clean(data.name).slice(0, 100);\nconst email = clean(data.email).slice(0, 254).toLowerCase();\nconst phone = clean(data.phone).slice(0, 25);\nconst service = clean(data.service).slice(0, 100);\nconst date = clean(data.date).slice(0, 10);\nconst time = clean(data.time).slice(0, 60);\nconst note = clean(data.message).slice(0, 500);\nif (clean(data.company)) throw new Error('Invalid form submission');\nif (!name || !/^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$/.test(email) || !phone || !/^\\d{4}-\\d{2}-\\d{2}$/.test(date) || !service || !time) {\n  throw new Error('Please provide a valid name, email, phone, service, date, and time');\n}\nconst safeName = escapeHtml(name);\nconst safeEmail = escapeHtml(email);\nconst safePhone = escapeHtml(phone);\nconst safeService = escapeHtml(service);\nconst safeDate = escapeHtml(date);\nconst safeTime = escapeHtml(time);\nconst safeNote = escapeHtml(note).replace(/\\r?\\n/g, '<br>') || 'No additional note';\nconst details = `<table role=\"presentation\" style=\"width:100%;border-collapse:collapse\"><tr><td style=\"padding:10px;border-bottom:1px solid #e6e8eb\"><b>Name</b></td><td style=\"padding:10px;border-bottom:1px solid #e6e8eb\">${safeName}</td></tr><tr><td style=\"padding:10px;border-bottom:1px solid #e6e8eb\"><b>Email</b></td><td style=\"padding:10px;border-bottom:1px solid #e6e8eb\">${safeEmail}</td></tr><tr><td style=\"padding:10px;border-bottom:1px solid #e6e8eb\"><b>Phone</b></td><td style=\"padding:10px;border-bottom:1px solid #e6e8eb\">${safePhone}</td></tr><tr><td style=\"padding:10px;border-bottom:1px solid #e6e8eb\"><b>Requested service</b></td><td style=\"padding:10px;border-bottom:1px solid #e6e8eb\">${safeService}</td></tr><tr><td style=\"padding:10px;border-bottom:1px solid #e6e8eb\"><b>Preferred date</b></td><td style=\"padding:10px;border-bottom:1px solid #e6e8eb\">${safeDate}</td></tr><tr><td style=\"padding:10px;border-bottom:1px solid #e6e8eb\"><b>Preferred time</b></td><td style=\"padding:10px;border-bottom:1px solid #e6e8eb\">${safeTime}</td></tr><tr><td style=\"padding:10px\"><b>Note</b></td><td style=\"padding:10px\">${safeNote}</td></tr></table>`;\nconst siteUrl = 'https://dentora-clinic-02.vercel.app/';\nconst shell = body => {\n  const logoUrl = siteUrl + 'assets/favicon.svg';\n  return '<table role=\"presentation\" width=\"100%\" cellspacing=\"0\" cellpadding=\"0\" border=\"0\" bgcolor=\"#f3f4f3\" style=\"width:100%;background:#f3f4f3;padding:28px 12px;font-family:Arial,Helvetica,sans-serif;color:#202727\"><tr><td align=\"center\">' +\n    '<table role=\"presentation\" width=\"600\" cellspacing=\"0\" cellpadding=\"0\" border=\"0\" style=\"width:100%;max-width:600px;border-collapse:separate;border-spacing:0;background:#fff;border-radius:16px;overflow:hidden\">' +\n    '<tr><td bgcolor=\"#21484b\" style=\"background:#21484b;padding:25px 30px 22px\"><a href=\"' + siteUrl + '\" style=\"display:inline-block;color:#fff;text-decoration:none\"><img src=\"' + logoUrl + '\" width=\"38\" height=\"38\" alt=\"Dentora tooth logo\" style=\"display:inline-block;width:38px;height:38px;vertical-align:middle;border:0;margin-right:10px\"><span style=\"font-size:25px;font-weight:700;letter-spacing:-1px;vertical-align:middle;color:#fff\">Dentora</span><span style=\"font-size:11px;color:#d5e8e6;vertical-align:top\">&reg;</span></a><div style=\"margin-top:10px;color:#c7ddda;font-size:11px;letter-spacing:1.2px;text-transform:uppercase\">Dentistry with a personal touch</div></td></tr>' +\n    '<tr><td style=\"padding:30px 30px 28px;background:#fff;font-size:15px;line-height:1.65;color:#344241\">' + body + '</td></tr>' +\n    '<tr><td bgcolor=\"#e8f0ee\" style=\"background:#e8f0ee;padding:22px 30px 24px;border-top:1px solid #dce7e4\"><div style=\"color:#21484b;font-size:13px;font-weight:700\">Dentora Dental Care</div><div style=\"margin-top:5px;color:#62716e;font-size:12px;line-height:1.6\">Clear advice. Care at your pace.</div><div style=\"margin-top:16px\"><a href=\"' + siteUrl + '\" style=\"display:inline-block;margin:0 16px 6px 0;color:#237e86;font-size:12px;font-weight:700;text-decoration:none\"><span style=\"display:inline-block;margin-right:5px;color:#21484b\">&#8599;</span>Visit website</a><a href=\"mailto:ar0207493@gmail.com\" style=\"display:inline-block;margin-bottom:6px;color:#237e86;font-size:12px;font-weight:700;text-decoration:none\"><span style=\"display:inline-block;margin-right:5px;color:#21484b\">&#9993;</span>Email the clinic</a></div><div style=\"margin-top:12px;color:#82908d;font-size:10px\">Please reply to this email if you have any questions.</div></td></tr>' +\n    '</table></td></tr></table>';\n};\nconst adminHtml = shell(`<h2 style=\"font-size:21px\">New appointment request</h2><p>A patient has sent an appointment request. Please contact them to confirm availability.</p>${details}`);\nconst patientHtml = shell(`<h2 style=\"font-size:21px\">We received your request, ${safeName}.</h2><p>Thank you for contacting Dentora. Your appointment request is with our team. This email confirms receipt only; your appointment is not booked until the clinic confirms a time with you.</p><h3 style=\"font-size:16px\">Your requested visit</h3>${details}<p>Our team will follow up using the contact details you provided.</p>`);\n\nconst makeRawEmail = (to, subject, html) => {\n  const encodedSubject = Buffer.from(subject.replace(/[\\r\\n]+/g, ' '), 'utf8').toString('base64');\n  const encodedBody = Buffer.from(html, 'utf8').toString('base64').match(/.{1,76}/g).join('\\r\\n');\n  const mime = [\n    'From: Dentora Dental Care <ar0207493@gmail.com>',\n    'To: ' + to,\n    'Subject: =?UTF-8?B?' + encodedSubject + '?=',\n    'MIME-Version: 1.0',\n    'Content-Type: text/html; charset=UTF-8',\n    'Content-Transfer-Encoding: base64',\n    '', encodedBody\n  ].join('\\r\\n');\n  return Buffer.from(mime, 'utf8').toString('base64url');\n};\nconst adminRaw = makeRawEmail('ar0207493@gmail.com', 'New appointment request — ' + name, adminHtml);\nconst patientRaw = makeRawEmail(email, 'We received your appointment request | Dentora', patientHtml);\nreturn [{ json: { name, email, phone, service, date, time, message: note, adminHtml, patientHtml, adminRaw, patientRaw } }];"
+        "jsCode": "const incoming = $input.first().json;\nlet data = incoming.body ?? incoming;\nif (typeof data === 'string') {\n  try { data = JSON.parse(data); } catch { throw new Error('Request body must be valid JSON'); }\n}\nconst clean = value => String(value ?? '').trim();\nconst escapeHtml = value => clean(value).replace(/[&<>\\\"']/g, char => ({'&':'&amp;','<':'&lt;','>':'&gt;','\\\"':'&quot;',\"'\":'&#39;'}[char]));\nconst name = clean(data.name).slice(0, 100);\nconst email = clean(data.email).slice(0, 254).toLowerCase();\nlet phoneDigits = clean(data.phone).replace(/[^0-9]/g, '');\nif (phoneDigits.startsWith('00')) phoneDigits = phoneDigits.slice(2);\nif (/^03[0-9]{9}$/.test(phoneDigits)) phoneDigits = '92' + phoneDigits.slice(1);\nif (!/^[1-9][0-9]{7,14}$/.test(phoneDigits)) throw new Error('Please enter a valid WhatsApp number including country code');\nconst phone = '+' + phoneDigits;\nconst service = clean(data.service).slice(0, 100);\nconst date = clean(data.date).slice(0, 10);\nconst time = clean(data.time).slice(0, 60);\nconst note = clean(data.message).slice(0, 500);\nif (clean(data.company)) throw new Error('Invalid form submission');\nif (!name || !/^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$/.test(email) || !phone || !/^\\d{4}-\\d{2}-\\d{2}$/.test(date) || !service || !time) {\n  throw new Error('Please provide a valid name, email, phone, service, date, and time');\n}\nconst safeName = escapeHtml(name);\nconst safeEmail = escapeHtml(email);\nconst safePhone = escapeHtml(phone);\nconst safeService = escapeHtml(service);\nconst safeDate = escapeHtml(date);\nconst safeTime = escapeHtml(time);\nconst safeNote = escapeHtml(note).replace(/\\r?\\n/g, '<br>') || 'No additional note';\nconst details = `<table role=\"presentation\" style=\"width:100%;border-collapse:collapse\"><tr><td style=\"padding:10px;border-bottom:1px solid #e6e8eb\"><b>Name</b></td><td style=\"padding:10px;border-bottom:1px solid #e6e8eb\">${safeName}</td></tr><tr><td style=\"padding:10px;border-bottom:1px solid #e6e8eb\"><b>Email</b></td><td style=\"padding:10px;border-bottom:1px solid #e6e8eb\">${safeEmail}</td></tr><tr><td style=\"padding:10px;border-bottom:1px solid #e6e8eb\"><b>Phone</b></td><td style=\"padding:10px;border-bottom:1px solid #e6e8eb\">${safePhone}</td></tr><tr><td style=\"padding:10px;border-bottom:1px solid #e6e8eb\"><b>Requested service</b></td><td style=\"padding:10px;border-bottom:1px solid #e6e8eb\">${safeService}</td></tr><tr><td style=\"padding:10px;border-bottom:1px solid #e6e8eb\"><b>Preferred date</b></td><td style=\"padding:10px;border-bottom:1px solid #e6e8eb\">${safeDate}</td></tr><tr><td style=\"padding:10px;border-bottom:1px solid #e6e8eb\"><b>Preferred time</b></td><td style=\"padding:10px;border-bottom:1px solid #e6e8eb\">${safeTime}</td></tr><tr><td style=\"padding:10px\"><b>Note</b></td><td style=\"padding:10px\">${safeNote}</td></tr></table>`;\nconst siteUrl = 'https://dentora-clinic-02.vercel.app/';\nconst shell = body => {\n  const logoUrl = siteUrl + 'assets/favicon.svg';\n  return '<table role=\"presentation\" width=\"100%\" cellspacing=\"0\" cellpadding=\"0\" border=\"0\" bgcolor=\"#f3f4f3\" style=\"width:100%;background:#f3f4f3;padding:28px 12px;font-family:Arial,Helvetica,sans-serif;color:#202727\"><tr><td align=\"center\">' +\n    '<table role=\"presentation\" width=\"600\" cellspacing=\"0\" cellpadding=\"0\" border=\"0\" style=\"width:100%;max-width:600px;border-collapse:separate;border-spacing:0;background:#fff;border-radius:16px;overflow:hidden\">' +\n    '<tr><td bgcolor=\"#21484b\" style=\"background:#21484b;padding:25px 30px 22px\"><a href=\"' + siteUrl + '\" style=\"display:inline-block;color:#fff;text-decoration:none\"><img src=\"' + logoUrl + '\" width=\"38\" height=\"38\" alt=\"Dentora tooth logo\" style=\"display:inline-block;width:38px;height:38px;vertical-align:middle;border:0;margin-right:10px\"><span style=\"font-size:25px;font-weight:700;letter-spacing:-1px;vertical-align:middle;color:#fff\">Dentora</span><span style=\"font-size:11px;color:#d5e8e6;vertical-align:top\">&reg;</span></a><div style=\"margin-top:10px;color:#c7ddda;font-size:11px;letter-spacing:1.2px;text-transform:uppercase\">Dentistry with a personal touch</div></td></tr>' +\n    '<tr><td style=\"padding:30px 30px 28px;background:#fff;font-size:15px;line-height:1.65;color:#344241\">' + body + '</td></tr>' +\n    '<tr><td bgcolor=\"#e8f0ee\" style=\"background:#e8f0ee;padding:22px 30px 24px;border-top:1px solid #dce7e4\"><div style=\"color:#21484b;font-size:13px;font-weight:700\">Dentora Dental Care</div><div style=\"margin-top:5px;color:#62716e;font-size:12px;line-height:1.6\">Clear advice. Care at your pace.</div><div style=\"margin-top:16px\"><a href=\"' + siteUrl + '\" style=\"display:inline-block;margin:0 16px 6px 0;color:#237e86;font-size:12px;font-weight:700;text-decoration:none\"><span style=\"display:inline-block;margin-right:5px;color:#21484b\">&#8599;</span>Visit website</a><a href=\"mailto:ar0207493@gmail.com\" style=\"display:inline-block;margin-bottom:6px;color:#237e86;font-size:12px;font-weight:700;text-decoration:none\"><span style=\"display:inline-block;margin-right:5px;color:#21484b\">&#9993;</span>Email the clinic</a></div><div style=\"margin-top:12px;color:#82908d;font-size:10px\">Please reply to this email if you have any questions.</div></td></tr>' +\n    '</table></td></tr></table>';\n};\nconst adminHtml = shell(`<h2 style=\"font-size:21px\">New appointment request</h2><p>A patient has sent an appointment request. Please contact them to confirm availability.</p>${details}`);\nconst patientHtml = shell(`<h2 style=\"font-size:21px\">We received your request, ${safeName}.</h2><p>Thank you for contacting Dentora. Your appointment request is with our team. This email confirms receipt only; your appointment is not booked until the clinic confirms a time with you.</p><h3 style=\"font-size:16px\">Your requested visit</h3>${details}<p>Our team will follow up using the contact details you provided.</p>`);\n\nconst makeRawEmail = (to, subject, html) => {\n  const encodedSubject = Buffer.from(subject.replace(/[\\r\\n]+/g, ' '), 'utf8').toString('base64');\n  const encodedBody = Buffer.from(html, 'utf8').toString('base64').match(/.{1,76}/g).join('\\r\\n');\n  const mime = [\n    'From: Dentora Dental Care <ar0207493@gmail.com>',\n    'To: ' + to,\n    'Subject: =?UTF-8?B?' + encodedSubject + '?=',\n    'MIME-Version: 1.0',\n    'Content-Type: text/html; charset=UTF-8',\n    'Content-Transfer-Encoding: base64',\n    '', encodedBody\n  ].join('\\r\\n');\n  return Buffer.from(mime, 'utf8').toString('base64url');\n};\nconst adminRaw = makeRawEmail('ar0207493@gmail.com', 'New appointment request — ' + name, adminHtml);\nconst patientRaw = makeRawEmail(email, 'We received your appointment request | Dentora', patientHtml);\nreturn [{ json: { name, email, phone, service, date, time, message: note, adminHtml, patientHtml, adminRaw, patientRaw } }];"
       },
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
@@ -84,7 +84,7 @@
     {
       "parameters": {
         "respondWith": "json",
-        "responseBody": "={{ { success: true, message: 'Request received. Please check your email for confirmation.' } }}",
+        "responseBody": "={{ { success: true, message: \"Request received. Please check your email for confirmation.\", whatsapp: { clinicAccepted: $json.clinicWhatsAppAccepted, patientAccepted: $json.patientWhatsAppAccepted }, aiReplyUsed: $(\"Prepare patient email reply\").first().json.aiReplyUsed } }}",
         "options": {
           "responseCode": 200
         }
@@ -92,7 +92,7 @@
       "type": "n8n-nodes-base.respondToWebhook",
       "typeVersion": 1.4,
       "position": [
-        1780,
+        2820,
         300
       ],
       "id": "a4ad42a6-9466-44b1-9a63-4cb3d33165bd",
@@ -144,7 +144,103 @@
       ],
       "parameters": {
         "mode": "runOnceForAllItems",
-        "jsCode": "const base = $('Validate and prepare emails').first().json;\nconst result = $input.first().json ?? {};\nconst note = String(base.message ?? '').trim();\nconst generated = Array.isArray(result.candidates?.[0]?.content?.parts)\n  ? result.candidates[0].content.parts.map(part => typeof part.text === 'string' ? part.text : '').join('\\n').trim()\n  : '';\nconst fallback = 'Thank you for sharing this with us. Our dental team will review your note and follow up using the contact details you provided.';\nconst reply = (generated || fallback).replace(/^\\s*[\"'\\x60]+|[\"'\\x60]+\\s*$/g, '').slice(0, 1200);\nconst escapeHtml = value => String(value).replace(/[&<>\"']/g, char => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '\"': '&quot;', \"'\": '&#39;' }[char]));\nconst marker = '<h3 style=\"font-size:16px\">Your requested visit</h3>';\nconst replyBlock = '<div style=\"margin:22px 0;padding:17px 18px;background:#f3f7f6;border-left:3px solid #237e86;border-radius:5px\"><div style=\"margin-bottom:7px;color:#21484b;font-size:14px;font-weight:700\">A note in response to your message</div><div style=\"color:#344241;font-size:14px;line-height:1.65\">' + escapeHtml(reply).replace(/\\r?\\n/g, '<br>') + '</div></div>';\nconst patientHtml = note && base.patientHtml.includes(marker)\n  ? base.patientHtml.replace(marker, replyBlock + marker)\n  : base.patientHtml;\nconst encodedSubject = Buffer.from('We received your appointment request | Dentora', 'utf8').toString('base64');\nconst encodedBody = Buffer.from(patientHtml, 'utf8').toString('base64').match(/.{1,76}/g).join('\\r\\n');\nconst mime = [\n  'From: Dentora Dental Care <ar0207493@gmail.com>',\n  'To: ' + base.email,\n  'Subject: =?UTF-8?B?' + encodedSubject + '?=',\n  'MIME-Version: 1.0',\n  'Content-Type: text/html; charset=UTF-8',\n  'Content-Transfer-Encoding: base64',\n  '', encodedBody\n].join('\\r\\n');\nconst patientRaw = Buffer.from(mime, 'utf8').toString('base64url');\nreturn [{ json: { patientRaw, patientHtml, aiReplyUsed: Boolean(note && generated) } }];"
+        "jsCode": "const base = $('Validate and prepare emails').first().json;\nconst result = $input.first().json ?? {};\nconst note = String(base.message ?? '').trim();\nconst generated = Array.isArray(result.candidates?.[0]?.content?.parts)\n  ? result.candidates[0].content.parts.map(part => typeof part.text === 'string' ? part.text : '').join('\\n').trim()\n  : '';\nconst fallback = 'Thank you for sharing this with us. Our dental team will review your note and follow up using the contact details you provided.';\nconst reply = (generated || fallback).replace(/^\\s*[\"'\\x60]+|[\"'\\x60]+\\s*$/g, '').slice(0, 1200);\nconst escapeHtml = value => String(value).replace(/[&<>\"']/g, char => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '\"': '&quot;', \"'\": '&#39;' }[char]));\nconst marker = '<h3 style=\"font-size:16px\">Your requested visit</h3>';\nconst replyBlock = '<div style=\"margin:22px 0;padding:17px 18px;background:#f3f7f6;border-left:3px solid #237e86;border-radius:5px\"><div style=\"margin-bottom:7px;color:#21484b;font-size:14px;font-weight:700\">A note in response to your message</div><div style=\"color:#344241;font-size:14px;line-height:1.65\">' + escapeHtml(reply).replace(/\\r?\\n/g, '<br>') + '</div></div>';\nconst patientHtml = note && base.patientHtml.includes(marker)\n  ? base.patientHtml.replace(marker, replyBlock + marker)\n  : base.patientHtml;\nconst encodedSubject = Buffer.from('We received your appointment request | Dentora', 'utf8').toString('base64');\nconst encodedBody = Buffer.from(patientHtml, 'utf8').toString('base64').match(/.{1,76}/g).join('\\r\\n');\nconst mime = [\n  'From: Dentora Dental Care <ar0207493@gmail.com>',\n  'To: ' + base.email,\n  'Subject: =?UTF-8?B?' + encodedSubject + '?=',\n  'MIME-Version: 1.0',\n  'Content-Type: text/html; charset=UTF-8',\n  'Content-Transfer-Encoding: base64',\n  '', encodedBody\n].join('\\r\\n');\nconst patientRaw = Buffer.from(mime, 'utf8').toString('base64url');\nreturn [{ json: { patientRaw, patientHtml, replyText: note ? reply : '', aiReplyUsed: Boolean(note && generated) } }];"
+      }
+    },
+    {
+      "name": "Prepare WhatsApp notifications",
+      "id": "dentora-prepare-whatsapp",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1780,
+        300
+      ],
+      "parameters": {
+        "jsCode": "const request = $('Validate and prepare emails').first().json;\nconst receipt = $('Prepare patient email reply').first().json;\nconst number = String(request.phone).replace(/[^0-9]/g, '');\nif (!/^[1-9][0-9]{7,14}$/.test(number)) throw new Error('A WhatsApp number with country code is required');\nconst adminMessage = [\n  '*Dentora — New appointment request*',\n  'Name: ' + request.name,\n  'Phone: ' + request.phone,\n  'Email: ' + request.email,\n  'Service: ' + request.service,\n  'Preferred date: ' + request.date,\n  'Preferred time: ' + request.time,\n  'Please review the full request in your clinic email and contact the patient to confirm availability.'\n].join('\\n');\nconst patientMessage = [\n  'Hello ' + request.name + ', thank you for contacting Dentora.',\n  'We have received your appointment request for ' + request.date + ' (' + request.time + ').',\n  receipt.replyText || '',\n  'Our team will contact you to confirm availability. Your appointment is confirmed only when the clinic agrees a time with you.',\n  'For help or to stop appointment updates, contact the clinic at ar0207493@gmail.com.'\n].filter(Boolean).join('\\n\\n');\nreturn [{ json: { adminChatId: '923196982582@c.us', patientChatId: number + '@c.us', adminMessage, patientMessage } }];"
+      }
+    },
+    {
+      "name": "WhatsApp alert to clinic",
+      "id": "dentora-waapi-admin",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        2040,
+        300
+      ],
+      "parameters": {
+        "method": "POST",
+        "url": "={{ 'https://waapi.app/api/v1/instances/' + $env.WAAPI_INSTANCE_ID + '/client/action/send-message' }}",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "={{ 'Bearer ' + $env.WAAPI_API_TOKEN }}"
+            },
+            {
+              "name": "Accept",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ { chatId: $('Prepare WhatsApp notifications').first().json.adminChatId, message: $('Prepare WhatsApp notifications').first().json.adminMessage, previewLink: false } }}",
+        "options": {
+          "timeout": 25000
+        }
+      },
+      "onError": "continueRegularOutput",
+      "retryOnFail": false
+    },
+    {
+      "name": "WhatsApp receipt to patient",
+      "id": "dentora-waapi-patient",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        2300,
+        300
+      ],
+      "parameters": {
+        "method": "POST",
+        "url": "={{ 'https://waapi.app/api/v1/instances/' + $env.WAAPI_INSTANCE_ID + '/client/action/send-message' }}",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "={{ 'Bearer ' + $env.WAAPI_API_TOKEN }}"
+            },
+            {
+              "name": "Accept",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ { chatId: $('Prepare WhatsApp notifications').first().json.patientChatId, message: $('Prepare WhatsApp notifications').first().json.patientMessage, previewLink: false } }}",
+        "options": {
+          "timeout": 25000
+        }
+      },
+      "onError": "continueRegularOutput",
+      "retryOnFail": false
+    },
+    {
+      "name": "Record WhatsApp send result",
+      "id": "dentora-waapi-result",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        2560,
+        300
+      ],
+      "parameters": {
+        "jsCode": "const admin = $('WhatsApp alert to clinic').first().json;\nconst patient = $('WhatsApp receipt to patient').first().json;\nconst accepted = result => result.status === 'success' && !result.error && Boolean(result.data);\nreturn [{ json: { clinicWhatsAppAccepted: accepted(admin), patientWhatsAppAccepted: accepted(patient) } }];"
       }
     }
   ],
@@ -186,7 +282,7 @@
       "main": [
         [
           {
-            "node": "Confirm form submission",
+            "node": "Prepare WhatsApp notifications",
             "type": "main",
             "index": 0
           }
@@ -214,6 +310,50 @@
           }
         ]
       ]
+    },
+    "Prepare WhatsApp notifications": {
+      "main": [
+        [
+          {
+            "node": "WhatsApp alert to clinic",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "WhatsApp alert to clinic": {
+      "main": [
+        [
+          {
+            "node": "WhatsApp receipt to patient",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "WhatsApp receipt to patient": {
+      "main": [
+        [
+          {
+            "node": "Record WhatsApp send result",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Record WhatsApp send result": {
+      "main": [
+        [
+          {
+            "node": "Confirm form submission",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
     }
   },
   "active": false,
@@ -226,4 +366,3 @@
   },
   "tags": []
 }
-
