@@ -39,3 +39,4 @@ html{scroll-padding-top:100px}body{background:#fff;color:var(--ink);overflow-x:c
 
 /* Header scrolls naturally with its banner. */
 html{scroll-padding-top:28px}.appointment-section{scroll-margin-top:28px}.footer-bottom{margin-top:38px}
+.hero-shell + .about{padding-top:0}
