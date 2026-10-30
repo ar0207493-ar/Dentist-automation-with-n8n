@@ -61,8 +61,8 @@ html{scroll-padding-top:28px}.appointment-section{scroll-margin-top:28px}.footer
 .treatment .treatment-arrow{background:var(--teal);border-color:var(--teal);color:#fff;transition:background-color .25s,border-color .25s}
 .treatment:hover .treatment-arrow{background:var(--dark);border-color:var(--dark)}
 @media(max-width:560px){.site-header .header-book{padding:4px 4px 4px 12px;min-height:36px;gap:9px;font-size:10px}.site-header .header-book .circle-arrow{width:26px;height:26px}.site-header .header-book .circle-arrow svg{display:block;width:14px;height:14px}}
-.success-dialog[data-state="pending"] .success-symbol{background:#edf5f5;color:var(--teal-dark)}
-.success-dialog[data-state="pending"] .success-symbol:after{content:'';position:absolute;width:64px;height:64px;border-radius:50%;border:2px solid transparent;border-top-color:var(--teal);animation:receipt-wait 1s linear infinite}
+.success-dialog[data-state="pending"] .success-symbol{position:relative;background:#edf5f5;color:var(--teal-dark)}
+.success-dialog[data-state="pending"] .success-symbol:after{content:'';position:absolute;inset:0;width:64px;height:64px;box-sizing:border-box;border-radius:50%;border:2px solid transparent;border-top-color:var(--teal);animation:receipt-wait 1s linear infinite}
 .success-dialog[data-state="error"] .success-symbol{background:#faeee9;color:#9f4a3b}
 @keyframes receipt-wait{to{transform:rotate(360deg)}}
 @media(prefers-reduced-motion:reduce){.success-dialog[data-state="pending"] .success-symbol:after{animation:none}}
