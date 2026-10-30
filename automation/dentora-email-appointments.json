@@ -240,7 +240,7 @@
         300
       ],
       "parameters": {
-        "jsCode": "const admin = $('WhatsApp alert to clinic').first().json;\nconst patient = $('WhatsApp receipt to patient').first().json;\nconst accepted = result => result.status === 'success' && !result.error && Boolean(result.data);\nreturn [{ json: { clinicWhatsAppAccepted: accepted(admin), patientWhatsAppAccepted: accepted(patient) } }];"
+        "jsCode": "const admin = $('WhatsApp alert to clinic').first().json;\nconst patient = $('WhatsApp receipt to patient').first().json;\nconst accepted = result => {\n  if (result.error || result.status !== 'success') return false;\n  const outcome = result.data;\n  if (outcome?.status === 'error') return false;\n  if (outcome?.status === 'success') return Boolean(outcome.data);\n  return Boolean(outcome?._data?.id || outcome?.id);\n};\nreturn [{ json: { clinicWhatsAppAccepted: accepted(admin), patientWhatsAppAccepted: accepted(patient) } }];"
       }
     }
   ],
