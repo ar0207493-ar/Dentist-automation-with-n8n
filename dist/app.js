@@ -100,12 +100,20 @@ appointmentForm.addEventListener('submit', async event => {
       })
     });
     const result = await response.json().catch(() => null);
-    if (!response.ok || result?.success !== true) throw new Error('n8n did not confirm the request');
-    status.textContent = 'Request received. Check your inbox for an email confirmation; the clinic will contact you to confirm a time.';
+    if (!response.ok || result?.success !== true) {
+      const issue = new Error('n8n did not confirm the request');
+      issue.serviceRestarting = [502, 503, 504].includes(response.status);
+      throw issue;
+    }
+    status.textContent = result.whatsapp?.patientAccepted === false
+      ? 'Your request was received and emailed. The WhatsApp update could not be sent; the clinic will follow up by email.'
+      : 'Request received. Check your email and WhatsApp; the clinic will contact you to confirm a time.';
     appointmentForm.reset();
     appointmentForm.elements.date.min = localToday.toISOString().slice(0, 10);
-  } catch {
-    status.textContent = 'The request could not be sent. Please contact the clinic directly or try again later.';
+  } catch (error) {
+    status.textContent = error.serviceRestarting
+      ? 'The booking service is restarting. Please try again in a few minutes or email ar0207493@gmail.com.'
+      : 'We could not confirm that your request finished. Please email the clinic before submitting again.';
   } finally {
     submitButton.disabled = false;
   }
