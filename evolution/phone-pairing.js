@@ -1,4 +1,38 @@
 /* Added to the pinned Evolution Manager bundle by patch-manager.cjs. */
+async function DentoraPreparePhonePairing({api,instance,token,active,announce}) {
+  const config={headers:{apikey:token}};
+  const route='/instance/connectionState/'+encodeURIComponent(instance.name);
+  const readState=async()=>{const result=await api.get(route,config);return result.data?.instance?.state;};
+  const fail=message=>{const error=new Error(message);error.dentoraPairingMessage=message;throw error;};
+  let state=await readState();
+  if(!active())return 'cancelled';
+  if(state==='open')return 'connected';
+  if(state==='close')return 'ready';
+  if(state!=='connecting')fail('The instance is not ready for pairing. Refresh the dashboard and try again.');
+  const response=await api.get('/instance/fetchInstances',{...config,params:{instanceName:instance.name}});
+  if(!active())return 'cancelled';
+  const pending=Array.isArray(response.data)?response.data.find(item=>item.name===instance.name):null;
+  if(!pending)fail('The instance could not be verified. Refresh the dashboard and try again.');
+  if(pending.connectionStatus==='open')return 'connected';
+  // Never log out an account that has already been paired. Only replace an unpaired QR attempt.
+  if(pending.ownerJid||pending.profileName)fail('An existing WhatsApp account is reconnecting. Wait for it to connect, or disconnect it from the dashboard before linking another number.');
+  state=await readState();
+  if(!active())return 'cancelled';
+  if(state==='open')return 'connected';
+  if(state==='close')return 'ready';
+  if(state!=='connecting')fail('The connection changed. Refresh the dashboard and try again.');
+  announce('Clearing the previous unpaired QR attempt…');
+  await api.delete('/instance/logout/'+encodeURIComponent(instance.name),config);
+  for(let count=0;count<12;count++) {
+    if(!active())return 'cancelled';
+    state=await readState();
+    if(!active())return 'cancelled';
+    if(state==='close')return 'ready';
+    if(state==='open')return 'connected';
+    if(count<11)await new Promise(resolve=>setTimeout(resolve,1000));
+  }
+  fail('The previous pairing attempt is still closing. Wait a moment, then request the code again.');
+}
 function DentoraPhonePairing({instance,connect,token,onClose}) {
   const [open,setOpen]=y.useState(false);
   const [phone,setPhone]=y.useState(instance.number||'');
@@ -23,6 +57,10 @@ function DentoraPhonePairing({instance,connect,token,onClose}) {
     const attempt=++run.current;
     setBusy(true);setError('');setCode('');setNotice('Requesting a pairing code…');
     try {
+      const prepared=await DentoraPreparePhonePairing({api:bd,instance,token,active:()=>attempt===run.current,announce:setNotice});
+      if(attempt!==run.current||prepared==='cancelled')return;
+      if(prepared==='connected'){setNotice('WhatsApp is already connected.');return;}
+      setNotice('Requesting a pairing code…');
       for(let count=0;count<8;count++) {
         if(attempt!==run.current)return;
         const result=await connect({instanceName:instance.name,token,number});
@@ -41,12 +79,12 @@ function DentoraPhonePairing({instance,connect,token,onClose}) {
         if(count<7)await new Promise(resolve=>setTimeout(resolve,2000));
       }
       setNotice('');
-      setError('No pairing code is ready yet. If a QR connection is already pending, let that attempt expire, then try again.');
+      setError('WhatsApp has not returned a pairing code yet. Wait a moment and request a fresh code.');
     } catch(cause) {
       if(attempt!==run.current)return;
       setNotice('');
       const status=cause?.response?.status;
-      setError(status===401||status===403?'Your manager session needs a fresh login. Sign in again, then retry.':'The pairing request could not finish. Wait a moment and try again. No message was sent.');
+      setError(cause?.dentoraPairingMessage||(status===401||status===403?'Your manager session needs a fresh login. Sign in again, then retry.':'The pairing request could not finish. Wait a moment and try again. No message was sent.'));
     } finally {
       if(attempt===run.current)setBusy(false);
     }

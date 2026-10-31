@@ -11,3 +11,5 @@ Render free services sleep and share the workspace's free-hour quota. The existi
 The Green API appointment workflow remains in use until a WhatsApp device is paired to Evolution and a provider switch is explicitly requested. No automatic message tests are included.
 
 The manager includes **Link with phone number** beside its QR button. It accepts an international WhatsApp number and requests the existing Evolution pairing-code endpoint only when the user clicks **Get pairing code**. Enter the returned code in WhatsApp Business → Linked devices → Link a device → Link with phone number instead. The build patches only the pinned manager's pairing dialog and changes its asset filename to avoid stale browser caches. It fails if the expected upstream UI changes.
+
+When the user requests a phone code, the manager checks live connection state first. It cancels a previous **unpaired** QR attempt before requesting the phone code. It refuses to reset a connection with a paired owner/profile and stops if the connection opens in the meantime. Closing the form cancels further polling. No instance, message or contact is deleted by the manager.
