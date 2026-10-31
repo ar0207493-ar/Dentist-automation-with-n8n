@@ -155,50 +155,50 @@
         300
       ],
       "parameters": {
-        "jsCode": "const request = $('Validate and prepare emails').first().json;\nconst receipt = $('Prepare patient email reply').first().json;\nconst number = String(request.phone).replace(/[^0-9]/g, '');\nif (!/^[1-9][0-9]{7,14}$/.test(number)) throw new Error('A WhatsApp number with country code is required');\nconst adminMessage = [\n  '*Dentora — New appointment request*',\n  'Name: ' + request.name,\n  'Phone: ' + request.phone,\n  'Email: ' + request.email,\n  'Service: ' + request.service,\n  'Preferred date: ' + request.date,\n  'Preferred time: ' + request.time,\n  'Note: ' + (request.message || 'No additional note provided.'),\n  'Please review the full request in your clinic email and contact the patient to confirm availability.'\n].join('\\n');\nconst patientMessage = [\n  '*DENTORA DENTAL CARE*\\n*Appointment request received*',\n  'Dear ' + request.name + ',\\nThank you for choosing Dentora. Here is a copy of your appointment request.',\n  [\n    '*Appointment details*',\n    'Name: ' + request.name,\n    'Email: ' + request.email,\n    'WhatsApp: ' + request.phone,\n    'Service: ' + request.service,\n    'Preferred date: ' + request.date,\n    'Preferred time: ' + request.time\n  ].join('\\n'),\n  '*Your note*\\n' + (request.message || 'No additional note provided.'),\n  request.message && receipt.replyText ? '*Response to your note*\\n' + receipt.replyText : '',\n  '*What happens next*\\nOur clinic team will contact you to confirm availability. Your appointment is confirmed only when the clinic agrees a time with you.',\n  '*Contact Dentora*\\nar0207493@gmail.com\\nFor help or to stop appointment updates, contact the clinic.'\n].filter(Boolean).join('\\n\\n');\nreturn [{ json: { adminChatId: '923196982582@c.us', patientChatId: number + '@c.us', adminMessage, patientMessage } }];"
+        "jsCode": "const request = $('Validate and prepare emails').first().json;\nconst receipt = $('Prepare patient email reply').first().json;\nconst number = String(request.phone).replace(/[^0-9]/g, '');\nif (!/^[1-9][0-9]{7,14}$/.test(number)) throw new Error('A WhatsApp number with country code is required');\nconst adminMessage = [\n  '*Dentora — New appointment request*',\n  'Name: ' + request.name,\n  'Phone: ' + request.phone,\n  'Email: ' + request.email,\n  'Service: ' + request.service,\n  'Preferred date: ' + request.date,\n  'Preferred time: ' + request.time,\n  'Note: ' + (request.message || 'No additional note provided.'),\n  'Please review the full request in your clinic email and contact the patient to confirm availability.'\n].join('\\n');\nconst patientMessage = [\n  '*DENTORA DENTAL CARE*\\n*Appointment request received*',\n  'Dear ' + request.name + ',\\nThank you for choosing Dentora. Here is a copy of your appointment request.',\n  [\n    '*Appointment details*',\n    'Name: ' + request.name,\n    'Email: ' + request.email,\n    'WhatsApp: ' + request.phone,\n    'Service: ' + request.service,\n    'Preferred date: ' + request.date,\n    'Preferred time: ' + request.time\n  ].join('\\n'),\n  '*Your note*\\n' + (request.message || 'No additional note provided.'),\n  request.message && receipt.replyText ? '*Response to your note*\\n' + receipt.replyText : '',\n  '*What happens next*\\nOur clinic team will contact you to confirm availability. Your appointment is confirmed only when the clinic agrees a time with you.',\n  '*Contact Dentora*\\nar0207493@gmail.com\\nFor help or to stop appointment updates, contact the clinic.'\n].filter(Boolean).join('\\n\\n');\nreturn [{ json: { adminNumber: '923196982582', patientNumber: number, adminMessage, patientMessage } }];"
       }
     },
     {
       "name": "WhatsApp alert to clinic",
       "id": "dentora-waapi-admin",
-      "type": "CUSTOM.dentoraGreenApi",
+      "type": "CUSTOM.dentoraEvolution",
       "typeVersion": 1,
       "position": [
         2320,
         300
       ],
       "parameters": {
-        "chatId": "={{ $(\"Prepare WhatsApp notifications\").first().json.adminChatId }}",
+        "number": "={{ $(\"Prepare WhatsApp notifications\").first().json.adminNumber }}",
         "message": "={{ $(\"Prepare WhatsApp notifications\").first().json.adminMessage }}"
       },
       "onError": "continueRegularOutput",
       "retryOnFail": false,
       "credentials": {
-        "dentoraGreenApi": {
-          "id": "dentoraGreenApi2026",
-          "name": "Dentora Green API"
+        "dentoraEvolution": {
+          "id": "dentoraEvolution2026",
+          "name": "Dentora Evolution"
         }
       }
     },
     {
       "name": "WhatsApp receipt to patient",
       "id": "dentora-waapi-patient",
-      "type": "CUSTOM.dentoraGreenApi",
+      "type": "CUSTOM.dentoraEvolution",
       "typeVersion": 1,
       "position": [
         2840,
         300
       ],
       "parameters": {
-        "chatId": "={{ $(\"Prepare WhatsApp notifications\").first().json.patientChatId }}",
+        "number": "={{ $(\"Prepare WhatsApp notifications\").first().json.patientNumber }}",
         "message": "={{ $(\"Prepare WhatsApp notifications\").first().json.patientMessage }}"
       },
       "onError": "continueRegularOutput",
       "retryOnFail": false,
       "credentials": {
-        "dentoraGreenApi": {
-          "id": "dentoraGreenApi2026",
-          "name": "Dentora Green API"
+        "dentoraEvolution": {
+          "id": "dentoraEvolution2026",
+          "name": "Dentora Evolution"
         }
       }
     },
@@ -212,7 +212,7 @@
         300
       ],
       "parameters": {
-        "jsCode": "const clinic=$('WhatsApp alert to clinic').first().json;\nconst patient=$('WhatsApp receipt to patient').first().json;\nreturn [{json:{provider:'green-api',clinicWhatsAppQueued:clinic.queued===true,patientWhatsAppQueued:patient.queued===true,clinicMessageId:clinic.messageId||null,patientMessageId:patient.messageId||null,clinicWhatsAppError:clinic.errorCode||null,patientWhatsAppError:patient.errorCode||null}}];"
+        "jsCode": "const clinic=$('WhatsApp alert to clinic').first().json;\nconst patient=$('WhatsApp receipt to patient').first().json;\nreturn [{json:{provider:'evolution',clinicWhatsAppQueued:clinic.queued===true,patientWhatsAppQueued:patient.queued===true,clinicMessageId:clinic.messageId||null,patientMessageId:patient.messageId||null,clinicWhatsAppError:clinic.errorCode||null,patientWhatsAppError:patient.errorCode||null}}];"
       }
     },
     {
