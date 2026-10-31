@@ -4,6 +4,8 @@ COPY start.sh /evolution/dentora/start.sh
 COPY prepare-db.cjs /evolution/dentora/prepare-db.cjs
 COPY patch-manager.cjs phone-pairing.js /evolution/dentora/
 RUN node /evolution/dentora/patch-manager.cjs
+COPY patch-baileys.cjs companion-pairing.js BAILEYS-LICENSE /evolution/dentora/
+RUN node /evolution/dentora/patch-baileys.cjs
 ENV TZ=Asia/Karachi
 EXPOSE 10000
 ENTRYPOINT ["/bin/sh", "/evolution/dentora/start.sh"]

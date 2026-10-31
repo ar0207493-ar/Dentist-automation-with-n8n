@@ -4,6 +4,8 @@ Pinned upstream Evolution API 2.3.7, linux/amd64 image digest. Deploy as a separ
 
 The wrapper creates a separate `dentora_evolution` database on the existing Render Postgres instance. It validates the target before migrations and refuses an n8n database. Sessions are stored in PostgreSQL; local cache is enabled instead of a separate Redis service for this small demo.
 
+The build also applies a version-checked pairing compatibility patch to the existing Baileys package. See `BAILEYS-PATCH.md` for source attribution, the observed error, scope and removal conditions.
+
 Secrets live only in Render environment settings: `DATABASE_ADMIN_URI`, `DATABASE_CONNECTION_URI`, `AUTHENTICATION_API_KEY`. Do not commit them, expose them in the website or print them in logs.
 
 Render free services sleep and share the workspace's free-hour quota. The existing free Postgres instance expires 30 days after its creation. This setup is for demonstration, not guaranteed always-on delivery.
