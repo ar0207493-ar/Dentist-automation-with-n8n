@@ -17,6 +17,8 @@ function patchBaileys(root){
  let pairing=socket.slice(pairingStart,pairingEnd);
  pairing=replaceOne(pairing,'    const requestPairingCode = async (phoneNumber, customPairingCode) => {',`    let dentoraPendingPhonePairing;
     const requestPairingCode = async (phoneNumber, customPairingCode) => {
+        // QR rotations cannot automatically retry a rejected registration.
+        if (dentoraPendingPhonePairing?.rejected) return undefined;
         // QR rotation must not silently invalidate the code the user is entering.
         // A fresh manager request explicitly resets the unpaired socket first.
         if (!customPairingCode && dentoraPendingPhonePairing?.number === phoneNumber) {
@@ -29,6 +31,7 @@ function patchBaileys(root){
  pairing=replaceOne(pairing,`        });
         return authState.creds.pairingCode;`,`        }, 15000);
         } catch (error) {
+            dentoraPendingPhonePairing = { rejected: true };
             logger.error({ statusCode: Number(error?.data) || Number(error?.output?.statusCode) || 0, reason: /^[A-Za-z -]{1,60}$/.test(error?.message || '') ? error.message : 'protocol-error', browserOs: browser[0], browserName: browser[1] }, 'Dentora phone pairing registration was rejected by WhatsApp');
             authState.creds.pairingCode = undefined;
             if (!authState.creds.registered && authState.creds.me?.id === jidEncode(phoneNumber, 's.whatsapp.net')) {

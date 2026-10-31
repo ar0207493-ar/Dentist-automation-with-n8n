@@ -13,4 +13,6 @@ The phone-code request additionally waits up to 15 seconds for WhatsApp's IQ ack
 
 Phone registration uses canonical Chrome platform id `1` and display `Chrome (Mac OS)`, matching Baileys' standard Chrome preset rather than forwarding a product name. Rejection diagnostics prioritize Baileys' actual stanza error code (`error.data`) over Boom's generic HTTP status, and log only a restricted error label and browser OS/name. Credentials, QR payloads, phone numbers and pairing codes are not logged by this adaptation.
 
+After a server rejection, further automatic phone-code requests on that socket are suppressed, including QR-rotation callbacks. A manually started fresh attempt uses a new socket; do not keep retrying when WhatsApp returns `429 rate-overlimit`. WhatsApp did not provide a reset time in the observed reply.
+
 Successful device linking must still be confirmed by live state `open` after approval on the user's phone. Do not infer it from code generation or run message tests automatically.
