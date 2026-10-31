@@ -1,0 +1,11 @@
+# Dentora Evolution API — Render demo
+
+Pinned upstream Evolution API 2.3.7, linux/amd64 image digest. Deploy as a separate free Docker web service in Singapore, with Dockerfile `evolution/Dockerfile` and build context `evolution`.
+
+The wrapper creates a separate `dentora_evolution` database on the existing Render Postgres instance. It validates the target before migrations and refuses an n8n database. Sessions are stored in PostgreSQL; local cache is enabled instead of a separate Redis service for this small demo.
+
+Secrets live only in Render environment settings: `DATABASE_ADMIN_URI`, `DATABASE_CONNECTION_URI`, `AUTHENTICATION_API_KEY`. Do not commit them, expose them in the website or print them in logs.
+
+Render free services sleep and share the workspace's free-hour quota. The existing free Postgres instance expires 30 days after its creation. This setup is for demonstration, not guaranteed always-on delivery.
+
+The Green API appointment workflow remains in use until a WhatsApp device is paired to Evolution and a provider switch is explicitly requested. No automatic message tests are included.
