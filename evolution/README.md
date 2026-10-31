@@ -9,3 +9,5 @@ Secrets live only in Render environment settings: `DATABASE_ADMIN_URI`, `DATABAS
 Render free services sleep and share the workspace's free-hour quota. The existing free Postgres instance expires 30 days after its creation. This setup is for demonstration, not guaranteed always-on delivery.
 
 The Green API appointment workflow remains in use until a WhatsApp device is paired to Evolution and a provider switch is explicitly requested. No automatic message tests are included.
+
+The manager includes **Link with phone number** beside its QR button. It accepts an international WhatsApp number and requests the existing Evolution pairing-code endpoint only when the user clicks **Get pairing code**. Enter the returned code in WhatsApp Business → Linked devices → Link a device → Link with phone number instead. The build patches only the pinned manager's pairing dialog and changes its asset filename to avoid stale browser caches. It fails if the expected upstream UI changes.
