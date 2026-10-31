@@ -11,6 +11,33 @@ function patchBaileys(root){
  const receivePath=path.join(root,'lib/Socket/messages-recv.js');
  const socketPath=path.join(root,'lib/Socket/socket.js');
  let receive=fs.readFileSync(receivePath,'utf8'),socket=fs.readFileSync(socketPath,'utf8');
+ const pairingStart=socket.indexOf('    const requestPairingCode = async (phoneNumber, customPairingCode) => {');
+ const pairingEnd=socket.indexOf('    async function generatePairingKey()',pairingStart);
+ if(pairingStart<0||pairingEnd<0)throw Error('Pinned phone pairing function was not found');
+ let pairing=socket.slice(pairingStart,pairingEnd);
+ pairing=replaceOne(pairing,'    const requestPairingCode = async (phoneNumber, customPairingCode) => {',`    let dentoraPendingPhonePairing;
+    const requestPairingCode = async (phoneNumber, customPairingCode) => {
+        // QR rotation must not silently invalidate the code the user is entering.
+        // A fresh manager request explicitly resets the unpaired socket first.
+        if (!customPairingCode && dentoraPendingPhonePairing?.number === phoneNumber) {
+            return dentoraPendingPhonePairing.code;
+        }
+        dentoraPendingPhonePairing = undefined;`);
+ pairing=replaceOne(pairing,'        await sendNode({','        try { await query({');
+ pairing=replaceOne(pairing,`        });
+        return authState.creds.pairingCode;`,`        }, 15000);
+        } catch (error) {
+            logger.error({ statusCode: Number(error?.output?.statusCode || error?.data) || 0 }, 'Dentora phone pairing registration was rejected by WhatsApp');
+            authState.creds.pairingCode = undefined;
+            if (!authState.creds.registered && authState.creds.me?.id === jidEncode(phoneNumber, 's.whatsapp.net')) {
+                authState.creds.me = undefined;
+            }
+            ev.emit('creds.update', authState.creds);
+            return undefined;
+        }
+        dentoraPendingPhonePairing = { number: phoneNumber, code: authState.creds.pairingCode };
+        return authState.creds.pairingCode;`);
+ socket=socket.slice(0,pairingStart)+pairing+socket.slice(pairingEnd);
  receive=replaceOne(receive,"const linkCodeCompanionReg = getBinaryNodeChild(node, 'link_code_companion_reg');",`const linkCodeCompanionReg = getBinaryNodeChild(node, 'link_code_companion_reg');
                 // WhatsApp also sends a registration notification without crypto fields.
                 if (!getBinaryNodeChildBuffer(linkCodeCompanionReg, 'primary_identity_pub')) { break; }`);
