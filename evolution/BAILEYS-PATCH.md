@@ -11,4 +11,6 @@ This is an unmerged upstream compatibility fix adapted to the existing pinned pa
 
 The phone-code request additionally waits up to 15 seconds for WhatsApp's IQ acknowledgement, using the library's existing `query` and error validation. A rejected request clears its pending code and logs only the status code; it never exposes a plausible-looking but unaccepted code. Within a single socket, QR rotations reuse an accepted code instead of silently replacing it. Requesting a fresh code from the manager closes the unpaired socket first, so it starts a new registration. These acknowledgement/cache changes are Dentora adaptations and are covered by local mocked protocol tests.
 
+Phone registration uses canonical Chrome platform id `1` and display `Chrome (Mac OS)`, matching Baileys' standard Chrome preset rather than forwarding a product name. Rejection diagnostics prioritize Baileys' actual stanza error code (`error.data`) over Boom's generic HTTP status, and log only a restricted error label and browser OS/name. Credentials, QR payloads, phone numbers and pairing codes are not logged by this adaptation.
+
 Successful device linking must still be confirmed by live state `open` after approval on the user's phone. Do not infer it from code generation or run message tests automatically.

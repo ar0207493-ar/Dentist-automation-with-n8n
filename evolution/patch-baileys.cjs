@@ -24,10 +24,12 @@ function patchBaileys(root){
         }
         dentoraPendingPhonePairing = undefined;`);
  pairing=replaceOne(pairing,'        await sendNode({','        try { await query({');
+ pairing=replaceOne(pairing,'content: getPlatformId(browser[1])',"content: '1'");
+ pairing=replaceOne(pairing,'content: `${browser[1]} (${browser[0]})`',"content: 'Chrome (Mac OS)'");
  pairing=replaceOne(pairing,`        });
         return authState.creds.pairingCode;`,`        }, 15000);
         } catch (error) {
-            logger.error({ statusCode: Number(error?.output?.statusCode || error?.data) || 0 }, 'Dentora phone pairing registration was rejected by WhatsApp');
+            logger.error({ statusCode: Number(error?.data) || Number(error?.output?.statusCode) || 0, reason: /^[A-Za-z -]{1,60}$/.test(error?.message || '') ? error.message : 'protocol-error', browserOs: browser[0], browserName: browser[1] }, 'Dentora phone pairing registration was rejected by WhatsApp');
             authState.creds.pairingCode = undefined;
             if (!authState.creds.registered && authState.creds.me?.id === jidEncode(phoneNumber, 's.whatsapp.net')) {
                 authState.creds.me = undefined;
