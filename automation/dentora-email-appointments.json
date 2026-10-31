@@ -161,68 +161,46 @@
     {
       "name": "WhatsApp alert to clinic",
       "id": "dentora-waapi-admin",
-      "type": "n8n-nodes-base.httpRequest",
-      "typeVersion": 4.2,
+      "type": "CUSTOM.dentoraGreenApi",
+      "typeVersion": 1,
+      "position": [
+        2320,
+        300
+      ],
+      "parameters": {
+        "chatId": "={{ $(\"Prepare WhatsApp notifications\").first().json.adminChatId }}",
+        "message": "={{ $(\"Prepare WhatsApp notifications\").first().json.adminMessage }}"
+      },
+      "onError": "continueRegularOutput",
+      "retryOnFail": false,
+      "credentials": {
+        "dentoraGreenApi": {
+          "id": "dentoraGreenApi2026",
+          "name": "Dentora Green API"
+        }
+      }
+    },
+    {
+      "name": "WhatsApp receipt to patient",
+      "id": "dentora-waapi-patient",
+      "type": "CUSTOM.dentoraGreenApi",
+      "typeVersion": 1,
       "position": [
         2840,
         300
       ],
       "parameters": {
-        "method": "POST",
-        "url": "https://waapi.app/api/v1/instances/REPLACE_WITH_INSTANCE_ID/client/action/send-message",
-        "sendHeaders": true,
-        "headerParameters": {
-          "parameters": [
-            {
-              "name": "Accept",
-              "value": "application/json"
-            }
-          ]
-        },
-        "sendBody": true,
-        "specifyBody": "json",
-        "jsonBody": "={{ { chatId: $('Prepare WhatsApp notifications').first().json.adminChatId, message: $('Prepare WhatsApp notifications').first().json.adminMessage, previewLink: false } }}",
-        "options": {
-          "timeout": 25000
-        },
-        "authentication": "genericCredentialType",
-        "genericAuthType": "httpHeaderAuth"
+        "chatId": "={{ $(\"Prepare WhatsApp notifications\").first().json.patientChatId }}",
+        "message": "={{ $(\"Prepare WhatsApp notifications\").first().json.patientMessage }}"
       },
       "onError": "continueRegularOutput",
-      "retryOnFail": false
-    },
-    {
-      "name": "WhatsApp receipt to patient",
-      "id": "dentora-waapi-patient",
-      "type": "n8n-nodes-base.httpRequest",
-      "typeVersion": 4.2,
-      "position": [
-        3360,
-        300
-      ],
-      "parameters": {
-        "method": "POST",
-        "url": "https://waapi.app/api/v1/instances/REPLACE_WITH_INSTANCE_ID/client/action/send-message",
-        "sendHeaders": true,
-        "headerParameters": {
-          "parameters": [
-            {
-              "name": "Accept",
-              "value": "application/json"
-            }
-          ]
-        },
-        "sendBody": true,
-        "specifyBody": "json",
-        "jsonBody": "={{ { chatId: $(\"Use verified WhatsApp recipient\").first().json.patientChatId, message: $(\"Prepare WhatsApp notifications\").first().json.patientMessage, previewLink: false } }}",
-        "options": {
-          "timeout": 25000
-        },
-        "authentication": "genericCredentialType",
-        "genericAuthType": "httpHeaderAuth"
-      },
-      "onError": "continueRegularOutput",
-      "retryOnFail": false
+      "retryOnFail": false,
+      "credentials": {
+        "dentoraGreenApi": {
+          "id": "dentoraGreenApi2026",
+          "name": "Dentora Green API"
+        }
+      }
     },
     {
       "name": "Record WhatsApp send result",
@@ -230,58 +208,12 @@
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        3620,
+        3100,
         300
       ],
       "parameters": {
-        "jsCode": "const admin = $('WhatsApp alert to clinic').first().json;\nconst patient = $('WhatsApp receipt to patient').first().json;\nconst identity = $('Use verified WhatsApp recipient').first().json;\nconst accepted = result => {\n  if (result.error || result.status !== 'success') return false;\n  if (result.data?.status === 'error') return false;\n  if (result.data?.status === 'success') return Boolean(result.data.data);\n  return Boolean(result.data?._data?.id || result.data?.id);\n};\nconst reason = result => {\n  if (accepted(result)) return null;\n  const text = String(result.data?.message || result.data?.explanation || result.error?.message || result.error || '').toLowerCase();\n  if (/trial/.test(text)) return 'trial_restricted';\n  if (/timeout|timed out/.test(text)) return 'timeout';\n  if (/rate|too many|protection/.test(text)) return 'send_limit';\n  if (/restrict|blocked|banned/.test(text)) return 'sender_restricted';\n  if (/authoriz|credential|token|forbidden/.test(text)) return 'connection_error';\n  if (/not registered|not.*whatsapp|invalid.*number/.test(text)) return 'recipient_unavailable';\n  return 'provider_rejected';\n};\nreturn [{ json: {\n  clinicWhatsAppAccepted: accepted(admin), patientWhatsAppAccepted: accepted(patient),\n  clinicWhatsAppError: reason(admin), patientWhatsAppError: identity.verified ? reason(patient) : 'recipient_lookup_failed'\n} }];"
+        "jsCode": "const clinic=$('WhatsApp alert to clinic').first().json;\nconst patient=$('WhatsApp receipt to patient').first().json;\nreturn [{json:{provider:'green-api',clinicWhatsAppQueued:clinic.queued===true,patientWhatsAppQueued:patient.queued===true,clinicMessageId:clinic.messageId||null,patientMessageId:patient.messageId||null,clinicWhatsAppError:clinic.errorCode||null,patientWhatsAppError:patient.errorCode||null}}];"
       }
-    },
-    {
-      "name": "Resolve patient WhatsApp ID",
-      "id": "dentora-resolve-waapi-recipient",
-      "type": "n8n-nodes-base.httpRequest",
-      "typeVersion": 4.2,
-      "position": [
-        2320,
-        300
-      ],
-      "parameters": {
-        "method": "POST",
-        "url": "https://waapi.app/api/v1/instances/REPLACE_WITH_INSTANCE_ID/client/action/get-number-id",
-        "sendHeaders": true,
-        "headerParameters": {
-          "parameters": [
-            {
-              "name": "Accept",
-              "value": "application/json"
-            }
-          ]
-        },
-        "sendBody": true,
-        "specifyBody": "json",
-        "jsonBody": "={{ { number: $(\"Prepare WhatsApp notifications\").first().json.patientChatId.split(\"@\")[0] } }}",
-        "options": {
-          "timeout": 25000
-        },
-        "authentication": "genericCredentialType",
-        "genericAuthType": "httpHeaderAuth"
-      },
-      "onError": "continueRegularOutput",
-      "retryOnFail": false
-    },
-    {
-      "name": "Use verified WhatsApp recipient",
-      "id": "dentora-verified-waapi-recipient",
-      "type": "n8n-nodes-base.code",
-      "typeVersion": 2,
-      "parameters": {
-        "jsCode": "const base = $('Prepare WhatsApp notifications').first().json;\nconst result = $input.first().json ?? {};\nconst id = result.data?.data?.numberId?._serialized || result.data?.numberId?._serialized || '';\nconst valid = /^[0-9]+@(c\\.us|lid)$/.test(id) && result.status === 'success' && result.data?.status !== 'error';\n// WaAPI trial accepts only its verified own-number alias, not that number's LID.\n// This exact account's verified trial recipient and admin number are the same.\nconst recipient = base.patientChatId === base.adminChatId ? base.adminChatId : id;\nreturn [{ json: { patientChatId: valid ? recipient : '', verified: valid } }];"
-      },
-      "position": [
-        2580,
-        300
-      ]
     },
     {
       "name": "Pause between WhatsApp messages",
@@ -294,7 +226,7 @@
         "unit": "seconds"
       },
       "position": [
-        3100,
+        2580,
         300
       ],
       "webhookId": "dentora-waapi-send-pause"
@@ -379,28 +311,6 @@
       ]
     },
     "Prepare WhatsApp notifications": {
-      "main": [
-        [
-          {
-            "node": "Resolve patient WhatsApp ID",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Resolve patient WhatsApp ID": {
-      "main": [
-        [
-          {
-            "node": "Use verified WhatsApp recipient",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Use verified WhatsApp recipient": {
       "main": [
         [
           {
