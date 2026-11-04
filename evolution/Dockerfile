@@ -6,6 +6,8 @@ COPY patch-manager.cjs phone-pairing.js /evolution/dentora/
 RUN node /evolution/dentora/patch-manager.cjs
 COPY patch-baileys.cjs companion-pairing.js BAILEYS-LICENSE /evolution/dentora/
 RUN node /evolution/dentora/patch-baileys.cjs
+# Generate the PostgreSQL client once in the image, not on every free-service wake.
+RUN DATABASE_PROVIDER=postgresql DATABASE_CONNECTION_URI=postgresql://build:build@127.0.0.1:5432/build npm run db:generate
 ENV TZ=Asia/Karachi
 EXPOSE 10000
 ENTRYPOINT ["/bin/sh", "/evolution/dentora/start.sh"]

@@ -6,5 +6,4 @@ export SERVER_URL="${RENDER_EXTERNAL_URL:?Render public URL is required}"
 export CONFIG_SESSION_PHONE_CLIENT=Ubuntu
 node /evolution/dentora/prepare-db.cjs
 npm run db:deploy
-npm run db:generate
 exec node dist/main
