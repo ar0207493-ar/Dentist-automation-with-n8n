@@ -134,6 +134,7 @@ appointmentForm.addEventListener('submit', async event => {
     const response = await fetch(webhookUrl, {
       method:'POST',
       keepalive:true,
+      signal:AbortSignal.timeout(60000),
       headers:{'Content-Type':'application/json'},
       body:JSON.stringify({
         name:values.name.trim(), email:values.email.trim(), phone:values.phone.trim(),
