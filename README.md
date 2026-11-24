@@ -1,27 +1,22 @@
-# Dentora — Dental care landing page
+# Dentora homepage showcase
 
-A responsive dental website based on the supplied visual reference. Real dental footage, a restrained editorial layout, and locally hosted GSAP text and scroll animations.
+Responsive, frontend-only dental homepage. Static output is in `dist/`; no build or backend is required.
 
-## Run
+- The live showcase publishes only Home. About remains in local development.
+- Every live anchor is a `#` placeholder, including dynamically opened content.
+- Appointment and newsletter forms do not submit, store or send data.
+- Shared header, footer, mobile menu and visible appointment section are defined in `dist/shared-components.js`.
+- GSAP and Lenis animations respect reduced-motion preferences.
+- Historical `automation/` and `evolution/` directories are not included in the published static site.
 
-Serve `dist/` with any static web server. No install or build step is required.
+## Preview
 
 ```sh
 python -m http.server 4173 --directory dist
 ```
 
-## Deploy
+## Hosting
 
-Import this GitHub repository into Vercel. `vercel.json` selects the static `dist` output directory. No environment variables are required. Pushes to the connected production branch can trigger automatic deployments.
+GitHub Pages serves the root of the `gh-pages` branch. It contains the contents of `dist/` plus `.nojekyll`; only static frontend files are deployed.
 
-## Behavior
-
-- GSAP 3.15.0 + ScrollTrigger: masked text reveals, staggered editorial cards, subtle hero parallax, and reading progress. No scroll hijacking.
-- Locally hosted, silent, looping 720p dental banner video. Play/pause control, poster fallback, reduced-motion and data-saving preferences, and offscreen/tab visibility pausing.
-- Accessible mobile menu, benefit and patient-story carousels, journal dialogs, and appointment-request planner with a downloadable request.
-- Newsletter signup is a browser-local preview. Appointment requests use the public HTTPS n8n webhook at `https://dentist-n8n-server.onrender.com/webhook/dentora-appointment`. The workflow in `automation/` must be published with both Gmail nodes connected. The form only reports success when n8n explicitly confirms completion of both email steps. The Render demo can sleep when inactive.
-- Team and patient stories are clearly marked illustrative. Stock media does not imply endorsement.
-
-## Assets
-
-See [THIRD-PARTY.md](THIRD-PARTY.md) for footage, photographs, and animation licensing/source details. No generated image is used in this version.
+See `THIRD-PARTY.md` for image, icon, font and animation credits.

@@ -7,24 +7,14 @@
 @media(min-width:801px) and (max-width:1100px){.hero{min-height:760px}}
 @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}*,*:before,*:after{animation-duration:.01ms!important;transition-duration:.01ms!important}.reveal-ready{opacity:1;transform:none}}
 
-/* Real footage, measured typography, and progressive-enhancement motion. */
-.hero-video{z-index:0;pointer-events:none;object-position:60% center}
-.hero-poster{z-index:0;object-position:60% center}
+/* Hero typography and progressive-enhancement motion. */
 .hero-shade{z-index:1;background:linear-gradient(90deg,rgba(9,29,33,.79),rgba(9,29,33,.34) 55%,rgba(9,29,33,.07)),linear-gradient(0deg,rgba(7,23,26,.76),transparent 48%)}
 .hero-content,.hero-bottom,.hero-caption{z-index:2}
-.hero-video,.hero-poster{width:100%;height:110%;top:-5%;object-fit:cover}
 .hero h1{line-height:1.06}
-.word-mask{display:inline-flex;overflow:hidden;vertical-align:bottom;padding-bottom:.12em;margin-bottom:-.12em}
-.motion-word{display:inline-block;transform-origin:0 100%;white-space:nowrap}
 .reading-progress{position:fixed;top:0;left:0;right:0;height:2px;background:#32b3bd;z-index:80;transform-origin:left;pointer-events:none}
-.video-toggle{display:flex;align-items:center;gap:8px;background:transparent;color:#fff;font-size:9px;padding:2px 6px;opacity:.85;transition:opacity .2s}
-.video-toggle:hover{opacity:1}
-.video-toggle-icon{font-size:12px;line-height:1}
-.hero-caption .video-toggle span{font-size:9px}
-.hero-caption .video-toggle-icon{font-size:12px}
 .glass-card{backdrop-filter:blur(8px);background:#ffffff0d}
 .benefit-teal{background:#309ca7}
 .contact-banner{background:#e4eeea}
 .social-links span{opacity:.7}
-@media(max-width:560px){.hero-video,.hero-poster{object-position:63% center}.hero-caption .video-toggle{gap:5px;font-size:7px}.hero-caption .video-toggle span{font-size:7px}.hero-caption .video-toggle-icon{font-size:10px}.hero-caption{left:6%;right:6%}.hero-caption a{gap:6px}.hero-description{max-width:260px}.hero h1{font-size:clamp(40px,11.3vw,61px)}}
-@media(prefers-reduced-motion:reduce){.hero-video,.hero-poster{transform:none!important}.motion-word{transform:none!important;opacity:1!important}.reading-progress{display:none}}
+@media(max-width:560px){.hero-caption{left:6%;right:6%}.hero-caption a{gap:6px}.hero-description{max-width:260px}.hero h1{font-size:clamp(40px,11.3vw,61px)}}
+@media(prefers-reduced-motion:reduce){.reading-progress{display:none}}
