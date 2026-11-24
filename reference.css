@@ -126,14 +126,19 @@ html.lenis { scroll-behavior: auto !important; }
   color: white;
   backdrop-filter: blur(12px);
   border-radius: 999px;
-  padding: .74em 1.35em;
-  font-size: clamp(11px, 1.06vw, 17px);
+  padding: 7px 18px;
+  font-size: clamp(14px, 1.06vw, 17px);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 36px;
+  line-height: 1.3;
   transition: background-color .22s ease, color .22s ease;
 }
 
 .ref-header .desktop-nav a.active,
 .ref-hero-services button[data-service="Dental checkup"] { background: #fff; color: #111; }
-.ref-header .desktop-nav a { display: inline-flex; align-items: center; justify-content: center; min-height: 3.1em; line-height: 1.2; }
+.ref-header .desktop-nav a { display: inline-flex; align-items: center; justify-content: center; min-height: 36px; line-height: 1.3; }
 
 .ref-button {
   display: inline-flex;
@@ -198,11 +203,11 @@ html.lenis { scroll-behavior: auto !important; }
 .ref-header .header-book:has(.ref-circle):is(:hover, :focus-visible) { padding-inline: 1.25em 3.22em; }
 .ref-header .header-book > .ref-call-label { font: inherit; }
 .ref-header .header-book > .ref-circle { font-size: inherit; }
-.ref-nav-label { display: inline-grid; grid-template-rows: 1.2em; height: 1.2em; line-height: 1.2; overflow: hidden; vertical-align: middle; }
-.ref-nav-label > span { display: block; grid-area: 1 / 1; line-height: inherit; transition: transform .8s cubic-bezier(.16,1,.3,1); }
-.ref-nav-label > span + span { transform: translateY(100%) scale(.7); }
+.ref-nav-label { display: inline-grid; grid-template-rows: 1.3em; height: 1.3em; line-height: 1.3; overflow: hidden; vertical-align: middle; }
+.ref-nav-label > span { display: flex; align-items: center; justify-content: center; grid-area: 1 / 1; line-height: inherit; transition: transform .4s cubic-bezier(.16,1,.3,1); }
+.ref-nav-label > span + span { transform: translateY(100%); }
 :is(.ref-header .desktop-nav a, .ref-roll):is(:hover,:focus-visible) .ref-nav-label > span:first-child { transform: translateY(-100%); }
-:is(.ref-header .desktop-nav a, .ref-roll):is(:hover,:focus-visible) .ref-nav-label > span + span { transform: translateY(0) scale(1); }
+:is(.ref-header .desktop-nav a, .ref-roll):is(:hover,:focus-visible) .ref-nav-label > span + span { transform: translateY(0); }
 
 .ref-hero .ref-hero-content {
   grid-row: 2;
@@ -221,7 +226,7 @@ html.lenis { scroll-behavior: auto !important; }
 .ref-hero .hero-description {
   font-family: inherit;
   max-width: 40em;
-  margin: .9em 0 1.4em;
+  margin: 0;
   color: #fff;
   font-size: clamp(12px, 1.04vw, 17px);
   line-height: 1.6;
@@ -236,14 +241,17 @@ html.lenis { scroll-behavior: auto !important; }
   row-gap: inherit;
 }
 
-.ref-hero-services { position: relative; z-index: 2; justify-self: end; display: grid; gap: .3rem; }
+.ref-hero .ref-hero-content { display: flex; flex-direction: column; align-items: start; }
+.ref-hero { --hero-copy-gap: 24px; }
+.ref-hero .ref-hero-content { gap: var(--hero-copy-gap); }
+.ref-hero-services { position: relative; z-index: 2; justify-self: end; display: grid; gap: 8px; }
 .ref-hero-extras { position: relative; z-index: 2; display: flex; justify-content: space-between; align-items: end; gap: 1rem; }
-.ref-preview-card { display: grid; gap: .55em; width: clamp(160px, 15vw, 240px); padding: .6em; color: #fff; border: 1px solid #ffffff40; border-radius: 14px; background: #ffffff26; backdrop-filter: blur(14px); text-align: left; font-size: clamp(12px, 1vw, 15px); line-height: 1.35; }
+.ref-preview-card { display: grid; gap: 8px; width: clamp(160px, 15vw, 240px); padding: 8px; color: #fff; border: 1px solid #ffffff24; border-radius: 14px; background: #ffffff26; backdrop-filter: blur(14px); text-align: left; font-size: clamp(12px, 1vw, 15px); line-height: 1.35; }
 .ref-preview-visual { display: block; position: relative; overflow: hidden; border-radius: 8px; }
 .ref-preview-visual img { width: 100%; height: auto; aspect-ratio: 16 / 9; }
 .ref-play { display: grid; place-items: center; position: absolute; top: 50%; left: 50%; transform: translate(-50%,-50%); width: 36px; height: 36px; border-radius: 50%; background: #122b32ad; font-size: 14px; }
 .ref-preview-video { width: 100%; display: block; max-height: 65vh; border-radius: 12px; }
-.ref-hero-services > div { display: flex; gap: .32rem; }
+.ref-hero-services > div { display: flex; gap: 8px; }
 .ref-hero-services button { font-weight: 400; }
 .ref-hero-caption {
   position: relative;
@@ -277,6 +285,7 @@ html.lenis { scroll-behavior: auto !important; }
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
   text-shadow: 0 1px 3px #0006;
+  border-color: #ffffff38;
 }
 .reference-page .ref-benefit-blue .ref-label { color: #fff; border-color: #fff; }
 
@@ -332,6 +341,8 @@ html.lenis { scroll-behavior: auto !important; }
 }
 .ref-about-inline-photo { --about-photo-width: 2em; position: relative; display: inline-block; width: calc(var(--about-photo-width) * var(--about-photo-progress, 1)); height: .88em; margin-inline: calc(.1em + .06em * var(--about-photo-progress, 1)); vertical-align: middle; transform: translateY(-.1em); border-radius: .18em; overflow: hidden; -webkit-text-stroke: 0; }
 .ref-about-inline-photo img { position: absolute; left: 50%; top: 0; transform: translateX(-50%); width: var(--about-photo-width); max-width: none; height: 100%; object-fit: cover; object-position: center 30%; }
+.ref-about-inline-photo img[src$="treatment.jpg"] { object-position: center 44%; }
+.ref-about-inline-photo img[src$="journal-cleaning.jpg"] { object-position: 62% 35%; }
 .ref-about-bottom { display: grid; grid-template-columns: minmax(0, 1fr) 34%; align-items: end; gap: 5%; margin-top: clamp(24px, 3vw, 48px); }
 .ref-about-bottom > img { width: 100%; height: auto; aspect-ratio: 1.55; border-radius: var(--ref-card-radius); }
 .ref-metrics { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: .75rem; margin: clamp(15px, 2vw, 32px) 0 0; }
@@ -743,6 +754,20 @@ body :is(button, .button, .ref-button) { box-shadow: none; }
   .ref-preview-visual img { aspect-ratio: 16 / 10; }
   .ref-hero-services { max-width: none; }
   .ref-hero-services button { min-height: 34px; padding-block: 5px; }
+}
+@media (min-width: 561px) and (min-height: 521px) {
+  .ref-hero { grid-template-rows: minmax(74px,1fr) auto auto; row-gap: var(--hero-copy-gap); }
+  .ref-hero-bottom { row-gap: 20px; }
+}
+@media (min-width: 561px) and (min-height: 521px) and (max-height: 700px) {
+  .ref-hero { --hero-copy-gap: 16px; }
+  .ref-preview-card { width: 170px; font-size: 13px; }
+}
+@media (max-width: 560px) {
+  .ref-hero { --hero-copy-gap: 18px; row-gap: var(--hero-copy-gap); }
+}
+@media (max-width: 560px) and (max-height: 640px) {
+  .ref-hero { --hero-copy-gap: 12px; }
 }
 
 @media (max-width: 1100px) {

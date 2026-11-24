@@ -462,15 +462,15 @@
           .sort((first, second) => first.compareDocumentPosition(second) & Node.DOCUMENT_POSITION_FOLLOWING ? -1 : 1);
         const reveal = gsap.timeline({scrollTrigger: {
           id: 'home-about-reading', trigger: aboutTitle,
-          start: 'top 75%', end: 'bottom 45%', scrub: .2,
+          start: 'top 75%', end: 'bottom 25%', scrub: .65,
         }});
         tokens.forEach((token, index) => {
           if (token.classList.contains('ref-about-inline-photo')) {
-            reveal.fromTo(token, {'--about-photo-progress': 0, clipPath: 'inset(0 50% 0 50%)'}, {
-              '--about-photo-progress': 1, clipPath: 'inset(0 0% 0 0%)', duration: .2, ease: 'none',
-            }, index * .1);
+            reveal.fromTo(token, {'--about-photo-progress': 0, clipPath: 'inset(0 50% 0 50%)', opacity: 0}, {
+              '--about-photo-progress': 1, clipPath: 'inset(0 0% 0 0%)', opacity: 1, duration: .6, ease: 'sine.inOut',
+            }, index * .12);
           } else {
-            reveal.fromTo(token, {color: '#ccc'}, {color: '#101213', duration: .2, ease: 'none'}, index * .1);
+            reveal.fromTo(token, {color: '#ccc'}, {color: '#101213', duration: .6, ease: 'none'}, index * .12);
           }
         });
       }
