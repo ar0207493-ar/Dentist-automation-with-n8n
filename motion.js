@@ -235,7 +235,8 @@
     imageGroups.forEach((group, frame) => observer.observe(frame));
     const revealStory = context.add(null, (photo, incoming, source, revision, direction) => {
       gsap.to(incoming, {
-        clipPath: 'inset(0 0 0% 0)', duration: .85, ease: 'power3.inOut',
+        // Animate one inset value so reverse clipping cannot switch discretely.
+        '--story-reveal-inset': '0%', duration: .85, ease: 'power3.inOut',
         onComplete: () => {
           if (!active || imageRevisions.get(photo) !== revision) return;
           photo.src = source;
@@ -254,9 +255,12 @@
         const source = event.detail[photo.id === 'story-preview' ? 'preview' : 'avatar'];
         const revision = (imageRevisions.get(photo) || 0) + 1;
         imageRevisions.set(photo, revision);
-        gsap.killTweensOf([photo, incoming], 'clipPath');
+        gsap.killTweensOf([photo, incoming], 'clipPath,--story-reveal-inset');
         gsap.set(photo, {clearProps: 'clipPath'});
-        gsap.set(incoming, {clipPath: direction > 0 ? covered : 'inset(100% 0 0 0)'});
+        gsap.set(incoming, {
+          '--story-reveal-inset': '100%',
+          clipPath: direction > 0 ? 'inset(0 0 var(--story-reveal-inset) 0)' : 'inset(var(--story-reveal-inset) 0 0 0)',
+        });
         incoming.hidden = false;
         incoming.src = source;
         incoming.decode().catch(() => {}).then(() => {
