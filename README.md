@@ -6,6 +6,7 @@ Responsive, frontend-only dental homepage. Static output is in `dist/`; no build
 - Every live anchor is a `#` placeholder, including dynamically opened content.
 - Appointment and newsletter forms do not submit, store or send data.
 - Shared header, footer, mobile menu and visible appointment section are defined in `dist/shared-components.js`.
+- Optimized WebP photographs, styled keyboard-accessible dropdowns, and non-submitting appointment controls.
 - GSAP and Lenis animations respect reduced-motion preferences.
 - Historical `automation/` and `evolution/` directories are not included in the published static site.
 

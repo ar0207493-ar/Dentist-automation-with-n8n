@@ -20,7 +20,7 @@
         syncTouch: true,
         syncTouchLerp: 0.12,
         touchInertiaExponent: 1.5,
-        prevent: node => node.closest('dialog, #mobile-nav'),
+        prevent: node => node.closest('dialog, #mobile-nav, .ref-select-options'),
       });
       lenis = scroller;
       const updateFrame = time => scroller.raf(time * 1000);
@@ -65,6 +65,8 @@
         const target = anchorTarget(location.hash);
         if (target) moveToAnchor(target, false);
       };
+      const scrollToRequest = event => { event.preventDefault(); scroller.scrollTo(event.detail, {offset: -24}); };
+      document.addEventListener('dentora:scroll-to', scrollToRequest);
       document.addEventListener('click', onAnchorClick);
       window.addEventListener('hashchange', restoreAnchor);
       if (document.readyState === 'complete') restoreAnchor();
@@ -78,6 +80,7 @@
         scroller.destroy();
         lenis = undefined;
         document.removeEventListener('click', onAnchorClick);
+        document.removeEventListener('dentora:scroll-to', scrollToRequest);
         window.removeEventListener('hashchange', restoreAnchor);
         window.removeEventListener('load', restoreAnchor);
       };
@@ -102,8 +105,9 @@
       opacity: 0, y: 24, duration: .6, stagger: .08, clearProps: 'opacity,transform',
       scrollTrigger: {trigger: formSection, start: 'top 82%', once: true},
     });
-    gsap.from('.ref-visit-photo', {clipPath: 'inset(0 0 100% 0)', duration: 1, ease: 'power3.inOut', clearProps: 'clipPath', scrollTrigger: {trigger: '.ref-visit-photo', start: 'top 88%', once: true}});
+    gsap.from('.ref-visit-photo figcaption', {opacity: 0, y: 20, duration: .65, clearProps: 'opacity,transform', scrollTrigger: {trigger: '.ref-visit-photo', start: 'top 88%', once: true}});
     gsap.from('.ref-visit-form', {opacity: 0, y: 32, duration: .65, clearProps: 'opacity,transform', scrollTrigger: {trigger: '.ref-visit-form', start: 'top 85%', once: true}});
+    gsap.from('.ref-visit-action .ref-button', {opacity: 0, y: 20, duration: .65, clearProps: 'opacity,transform', scrollTrigger: {trigger: '.ref-visit-action', start: 'top 93%', once: true}});
   });
   // Both pages share Lenis, the logo and form reveals; page-specific scenes start below.
   if (document.body.dataset.page === 'about') return;
@@ -115,7 +119,7 @@
     const header = document.querySelector('.ref-header');
     const services = document.querySelectorAll('.ref-hero-services button');
     const ticker = document.querySelector('.ref-hero-caption');
-    const preview = document.querySelector('.ref-preview-card');
+    const preview = document.querySelector('.ref-preview-card > span:last-child');
     const heroCopy = [header, title, description, button, preview, ...services, ticker];
     let active = true;
     let titleSplit;
@@ -187,7 +191,9 @@
   });
 
   media.add('(prefers-reduced-motion: no-preference)', context => {
-    const images = document.querySelectorAll('.reference-site img:not(.hero-photo, .ref-about-inline-photo img, .ref-story-incoming), .booking-visual img');
+    const overlayPhoto = '.ref-article-visual, .ref-benefit-photo, .ref-preview-visual, .ref-visit-photo, .ref-comparison-frame';
+    const images = [...document.querySelectorAll('.reference-site img:not(.hero-photo, .ref-about-inline-photo img, .ref-story-incoming), .booking-visual img')].filter(image => !image.closest(overlayPhoto));
+    document.querySelectorAll('.ref-benefit-photo > div').forEach(copy => gsap.from(copy, {opacity: 0, y: 20, duration: .65, clearProps: 'opacity,transform', scrollTrigger: {trigger: copy.parentElement, start: 'top 88%', once: true}}));
     const imageGroups = new Map();
     const imageRevisions = new WeakMap();
     const covered = 'inset(0 0 100% 0)';
@@ -227,9 +233,9 @@
       }
     }, {threshold: 0.1});
     imageGroups.forEach((group, frame) => observer.observe(frame));
-    const revealStory = context.add(null, (photo, incoming, source, revision) => {
+    const revealStory = context.add(null, (photo, incoming, source, revision, direction) => {
       gsap.to(incoming, {
-        clipPath: 'inset(0 0 0% 0)', duration: 1.2, ease: 'power3.inOut',
+        clipPath: 'inset(0 0 0% 0)', duration: .85, ease: 'power3.inOut',
         onComplete: () => {
           if (!active || imageRevisions.get(photo) !== revision) return;
           photo.src = source;
@@ -237,8 +243,11 @@
         },
       });
     });
+    let storyTransition;
     const animateStory = context.add(null, event => {
       event.preventDefault();
+      const direction = event.detail.direction;
+      storyTransition?.kill();
       storyPhotos.forEach(photo => {
         observer.unobserve(photo.parentElement);
         const incoming = photo.nextElementSibling;
@@ -247,21 +256,22 @@
         imageRevisions.set(photo, revision);
         gsap.killTweensOf([photo, incoming], 'clipPath');
         gsap.set(photo, {clearProps: 'clipPath'});
-        gsap.set(incoming, {clipPath: covered});
+        gsap.set(incoming, {clipPath: direction > 0 ? covered : 'inset(100% 0 0 0)'});
         incoming.hidden = false;
         incoming.src = source;
         incoming.decode().catch(() => {}).then(() => {
-          if (active && imageRevisions.get(photo) === revision) revealStory(photo, incoming, source, revision);
+          if (active && imageRevisions.get(photo) === revision) revealStory(photo, incoming, source, revision, direction);
         });
       });
-      gsap.fromTo(storyText, {opacity: 0, y: 40}, {
-        opacity: 1, y: 0, duration: 0.6, ease: 'power2.out',
-        overwrite: true, clearProps: 'opacity,transform',
-      });
+      storyTransition = gsap.timeline()
+        .to(storyText, {opacity: 0, y: direction * 18, duration: .2, ease: 'power1.in'})
+        .call(event.detail.applyCopy)
+        .fromTo(storyText, {opacity: 0, y: -direction * 24}, {opacity: 1, y: 0, duration: .6, immediateRender: false, ease: 'power2.out', clearProps: 'opacity,transform'});
     });
     stories.addEventListener('dentora:story-change', animateStory);
     return () => {
       active = false;
+      storyTransition?.kill();
       observer.disconnect();
       storyPhotos.forEach(photo => { photo.nextElementSibling.hidden = true; });
       stories.removeEventListener('dentora:story-change', animateStory);
@@ -358,7 +368,7 @@
         const actions = [...group.children].filter(child => !child.matches('h2, h3, small'));
         gsap.from(actions, {
           opacity: 0, y: 24, duration: 0.5, stagger: 0.07, ease: 'power2.out',
-          scrollTrigger: {trigger: group, start: 'top 92%', once: true},
+          scrollTrigger: {trigger: group, start: group.matches('.ref-footer-bottom') ? 'top bottom' : 'top 92%', once: true},
           clearProps: 'opacity,transform',
         });
       });
@@ -462,15 +472,15 @@
           .sort((first, second) => first.compareDocumentPosition(second) & Node.DOCUMENT_POSITION_FOLLOWING ? -1 : 1);
         const reveal = gsap.timeline({scrollTrigger: {
           id: 'home-about-reading', trigger: aboutTitle,
-          start: 'top 75%', end: 'bottom 25%', scrub: .65,
+          start: 'top 75%', end: 'bottom 10%', scrub: 1.1,
         }});
         tokens.forEach((token, index) => {
           if (token.classList.contains('ref-about-inline-photo')) {
             reveal.fromTo(token, {'--about-photo-progress': 0, clipPath: 'inset(0 50% 0 50%)', opacity: 0}, {
-              '--about-photo-progress': 1, clipPath: 'inset(0 0% 0 0%)', opacity: 1, duration: .6, ease: 'sine.inOut',
+              '--about-photo-progress': 1, clipPath: 'inset(0 0% 0 0%)', opacity: 1, duration: 1.2, ease: 'sine.inOut',
             }, index * .12);
           } else {
-            reveal.fromTo(token, {color: '#ccc'}, {color: '#101213', duration: .6, ease: 'none'}, index * .12);
+            reveal.fromTo(token, {color: '#ccc'}, {color: '#101213', duration: 1.2, ease: 'none'}, index * .12);
           }
         });
       }

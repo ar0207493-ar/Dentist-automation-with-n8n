@@ -14,18 +14,18 @@
   <link rel="stylesheet" href="styles.css">
   <link rel="stylesheet" href="polish.css">
   <link rel="stylesheet" href="ui.css">
-  <link rel="stylesheet" href="reference.css?v=2b35da47a6">
+  <link rel="stylesheet" href="reference.css?v=f2d67965a6">
   <link rel="stylesheet" href="assets/vendor/lenis.css">
   <script src="assets/vendor/gsap.min.js" defer></script>
   <script src="assets/vendor/ScrollTrigger.min.js" defer></script>
   <script src="assets/vendor/DrawSVGPlugin.min.js" defer></script>
   <script src="assets/vendor/lenis.min.js" defer></script>
   <script src="assets/vendor/SplitText.min.js" defer></script>
-  <script src="shared-components.js?v=bbc7f981d3" defer></script>
-  <script src="app.js?v=cdf99a1eab" defer></script>
-  <script src="motion.js?v=05d81ed57b" defer></script>
+  <script src="shared-components.js?v=a7bb90d9f9" defer></script>
+  <script src="app.js?v=e546ae7a8e" defer></script>
+  <script src="motion.js?v=dead0f400d" defer></script>
 </head>
-<body class="reference-page" data-page="home" data-link-mode="placeholder">
+<body data-link-mode="placeholder" class="reference-page" data-page="home">
   <svg class="svg-library" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"><defs>
     <symbol id="tooth" viewBox="0 0 32 36"><path d="M16 4C12-1 3 1 3 9c0 4 2 7 3 10 1 4 1 13 4 14 4 1 3-13 6-13s2 14 6 13c3-1 3-10 4-14 1-3 3-6 3-10 0-8-9-10-13-5Z" fill="currentColor"/><path d="M10 8c2-2 5-1 7 0" fill="none" stroke="var(--tooth-line,#24565b)" stroke-width="1.8" stroke-linecap="round"/></symbol>
     <symbol id="arrow" viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></symbol>
@@ -40,7 +40,7 @@
   <main id="main" class="reference-site">
     <section class="hero-shell ref-hero-shell" id="home" aria-labelledby="hero-title">
       <div class="hero ref-hero">
-        <img class="hero-photo" id="hero-photo" src="assets/reference/hero.jpg" alt="A woman receiving a dental examination" fetchpriority="high">
+        <img class="hero-photo" id="hero-photo" src="assets/reference/hero.webp" alt="A woman receiving a dental examination" fetchpriority="high">
         <div class="hero-shade" aria-hidden="true"></div>
         <header class="site-header ref-header" data-site-header></header>
 
@@ -52,7 +52,7 @@
         <div class="ref-hero-bottom">
           <div class="ref-hero-extras">
           <button class="ref-preview-card" type="button" id="hero-film" aria-label="Play dental treatment video">
-            <span class="ref-preview-visual"><img src="assets/reference/hero-preview.jpg" alt="" width="1280" height="853"><span class="ref-play" aria-hidden="true">▶</span></span>
+            <span class="ref-preview-visual"><img src="assets/reference/hero-preview.webp" alt="" width="1280" height="853"><span class="ref-play" aria-hidden="true">▶</span></span>
             <span>Good care starts with feeling comfortable.</span>
           </button>
           <div class="ref-hero-services" aria-label="Dental services">
@@ -77,9 +77,9 @@
       <div class="ref-about-top">
         <span class="ref-label">About Us</span>
         <h2 id="about-title" aria-label="We deliver personalized dental treatments with modern technology and gentle care ensuring healthy confident smiles for every patient.">
-          <span class="ref-about-line" aria-hidden="true"><span class="ref-about-copy">We deliver personalized</span><span class="ref-about-inline-photo"><img src="assets/treatment.jpg" alt="" loading="eager"></span><span class="ref-about-copy">dental</span></span>
+          <span class="ref-about-line" aria-hidden="true"><span class="ref-about-copy">We deliver personalized</span><span class="ref-about-inline-photo"><img src="assets/treatment.webp" alt="" loading="eager"></span><span class="ref-about-copy">dental</span></span>
           <span class="ref-about-line" aria-hidden="true"><span class="ref-about-copy">treatments with modern technology</span></span>
-          <span class="ref-about-line" aria-hidden="true"><span class="ref-about-copy">and gentle care</span><span class="ref-about-inline-photo"><img src="assets/reference/journal-cleaning.jpg" alt="" loading="eager"></span><span class="ref-about-copy">ensuring healthy</span></span>
+          <span class="ref-about-line" aria-hidden="true"><span class="ref-about-copy">and gentle care</span><span class="ref-about-inline-photo"><img src="assets/reference/journal-cleaning.webp" alt="" loading="eager"></span><span class="ref-about-copy">ensuring healthy</span></span>
           <span class="ref-about-line" aria-hidden="true"><span class="ref-about-copy">confident smiles for every patient.</span></span>
         </h2>
       </div>
@@ -93,7 +93,7 @@
             <div><dt aria-label="5"><span aria-hidden="true" data-count="5">5</span></dt><dd>Featured Services</dd></div>
           </dl>
         </div>
-        <img src="assets/reference/about-patient.jpg" alt="A smiling patient in a dental chair" loading="lazy">
+        <img src="assets/reference/about-patient.webp" alt="A smiling patient in a dental chair" loading="lazy">
       </div>
     </section>
 
@@ -105,7 +105,7 @@
           <p>Join hundreds of patients achieving healthier, brighter smiles through expert dental care and personalized treatments.</p>
         </div>
         <article class="ref-doctor" id="treatments">
-          <img src="assets/reference/doctor.jpg" alt="Illustrative portrait of a dentist standing in a clinic" loading="lazy">
+          <img src="assets/reference/doctor.webp" alt="Illustrative portrait of a dentist standing in a clinic" loading="lazy">
           <div class="ref-doctor-copy">
             <div><h3>Dr. Daniel Carter</h3><p>Lead Dental Specialist · Sample profile</p><p class="ref-rating"><span aria-hidden="true">★</span> 4.9 (45+ reviews)</p></div>
             <div><p>Dental care built around your comfort, your questions and your goals.</p>
@@ -115,7 +115,7 @@
         </article>
       </div>
       <div class="ref-treatment-photo">
-        <img src="assets/reference/treatment-room.jpg" alt="A light-filled room with a dental chair and exam light" loading="lazy">
+        <img src="assets/reference/treatment-room.webp" alt="A light-filled room with a dental chair and exam light" loading="lazy">
         <div class="ref-treatment-panel">
           <dl><div><dt>Recommended<br>Checkups per Year</dt><dd>2 <small>visits</small></dd></div><div><dt>Average<br>Treatment Time</dt><dd>40 <small>mins</small></dd></div></dl>
           <div class="ref-progress-title"><span>Example Appointment Progress</span><span>60%</span></div>
@@ -131,25 +131,25 @@
       </div>
       <div class="benefit-track ref-benefit-track" id="benefit-track" data-lenis-prevent-horizontal tabindex="0" aria-label="Reasons to choose Dentora">
         <article class="ref-benefit ref-benefit-consult">
-          <h3>Complete Oral Care</h3><img src="assets/reference/consultation.jpg" alt="A dentist reviewing a dental model" loading="lazy">
+          <h3>Complete Oral Care</h3><img src="assets/reference/consultation.webp" alt="A dentist reviewing a dental model" loading="lazy">
         </article>
         <article class="ref-benefit ref-benefit-blue">
-          <div class="ref-benefit-faces"><img src="assets/reference/about-man.jpg" alt="" loading="lazy"><img src="assets/reference/about-woman.jpg" alt="" loading="lazy"><img src="assets/reference/story-man.jpg" alt="" loading="lazy"><span>Care for your smile</span></div>
-          <img class="ref-benefit-reward-photo" src="assets/reference/journal-exam.jpg" alt="A dentist helping a patient look at her smile" loading="lazy"><div><span class="ref-label">Personal Care</span><h3>Comfort at every step</h3><p>From a warm welcome to a clear plan, your questions and comfort come first.</p></div>
+          <div class="ref-benefit-faces"><img src="assets/reference/about-man.webp" alt="" loading="lazy"><img src="assets/reference/about-woman.webp" alt="" loading="lazy"><img src="assets/reference/story-man.webp" alt="" loading="lazy"><span>Care for your smile</span></div>
+          <img class="ref-benefit-reward-photo" src="assets/reference/journal-exam.webp" alt="A dentist helping a patient look at her smile" loading="lazy"><div><span class="ref-label">Personal Care</span><h3>Comfort at every step</h3><p>From a warm welcome to a clear plan, your questions and comfort come first.</p></div>
         </article>
-        <article class="ref-benefit ref-benefit-image"><img src="assets/reference/benefit-patient.jpg" alt="A smiling woman receiving dental care" loading="lazy"></article>
+        <article class="ref-benefit ref-benefit-image"><img src="assets/reference/benefit-patient.webp" alt="A smiling woman receiving dental care" loading="lazy"></article>
         <article class="ref-benefit ref-benefit-chart"><strong>98%</strong><p>Illustrative oral health diagnostics</p><div class="ref-chart" aria-hidden="true"><span>Mar</span><span>Apr</span><span>May</span></div></article>
         <article class="ref-benefit ref-benefit-detail">
-          <img src="assets/clinic.jpg" alt="A dental chair in a bright clinic" loading="lazy">
+          <img src="assets/clinic.webp" alt="A dental chair in a bright clinic" loading="lazy">
           <h3>A Comfortable First Visit</h3>
           <p>Tell us what would help you feel at ease. We’ll walk you through your visit and make time for your questions.</p>
         </article>
         <article class="ref-benefit ref-benefit-detail ref-benefit-photo">
-          <img src="assets/reference/journal-visit.jpg" alt="A dentist discussing a visit with a patient" loading="lazy">
+          <img src="assets/reference/journal-visit.webp" alt="A dentist discussing a visit with a patient" loading="lazy">
           <div><span class="ref-label">Your Questions Matter</span><h3>Care built around you</h3><p>Talk through your options with a team that takes time to listen.</p></div>
         </article>
         <article class="ref-benefit ref-benefit-detail ref-benefit-photo">
-          <img src="assets/reference/treatment-room.jpg" alt="A modern dental treatment room" loading="lazy">
+          <img src="assets/reference/treatment-room.webp" alt="A modern dental treatment room" loading="lazy">
           <div><span class="ref-label">A Calm Space</span><h3>Feel at home in our care</h3><p>A bright, welcoming setting for your next visit.</p></div>
         </article>
       </div>
@@ -162,8 +162,8 @@
         <p>Move across the image or drag the slider to compare.</p>
       </div>
       <div class="ref-comparison-frame" id="smile-comparison" role="group" aria-label="AI-generated illustrative whitening comparison">
-        <div class="ref-comparison-layer ref-comparison-after"><img src="assets/reference/smile-comparison.png" alt="Illustrative smile with brighter teeth" loading="lazy"></div>
-        <div class="ref-comparison-layer ref-comparison-before"><img src="assets/reference/smile-comparison.png" alt="The same illustrative smile before whitening" loading="lazy"></div>
+        <div class="ref-comparison-layer ref-comparison-after"><img src="assets/reference/smile-comparison.webp" alt="Illustrative smile with brighter teeth" loading="lazy"></div>
+        <div class="ref-comparison-layer ref-comparison-before"><img src="assets/reference/smile-comparison.webp" alt="The same illustrative smile before whitening" loading="lazy"></div>
         <span class="ref-comparison-label ref-comparison-label-before">Before</span><span class="ref-comparison-label ref-comparison-label-after">After</span>
         <span class="ref-comparison-handle" aria-hidden="true"><span>↔</span></span>
         <input type="range" min="0" max="100" value="50" aria-label="Compare before and after smile" id="smile-comparison-range">
@@ -173,14 +173,14 @@
     <section class="ref-section ref-story" id="stories" aria-labelledby="story-label">
       <div class="ref-story-left">
         <h2 class="ref-label" id="story-label">Testimonial</h2>
-        <figure><span class="ref-story-portrait"><img id="story-preview" src="assets/reference/story-man.jpg" alt="" loading="lazy"><img class="ref-story-incoming" alt="" aria-hidden="true" hidden></span><figcaption><span>Happy Patients</span><span>2026</span></figcaption></figure>
+        <figure><span class="ref-story-portrait"><img id="story-preview" src="assets/reference/story-man.webp" alt="" loading="lazy"><img class="ref-story-incoming" alt="" aria-hidden="true" hidden></span><figcaption><span>Happy Patients</span><span>2026</span></figcaption></figure>
       </div>
       <div class="ref-story-main" aria-live="polite">
         <blockquote id="story-quote">We deliver personalized dental treatments with modern technology and gentle care ensuring healthy confident smiles for every patient.</blockquote>
         <p><strong id="story-person">Savannah Nguyen</strong><br><span id="story-kind">Medical Assistant · Sample testimonial</span></p>
       </div>
       <div class="ref-story-right">
-        <span class="ref-story-portrait"><img id="story-avatar" src="assets/reference/story-woman.jpg" alt="Illustrative testimonial portrait" loading="lazy"><img class="ref-story-incoming" alt="" aria-hidden="true" hidden></span>
+        <span class="ref-story-portrait"><img id="story-avatar" src="assets/reference/story-woman.webp" alt="Illustrative testimonial portrait" loading="lazy"><img class="ref-story-incoming" alt="" aria-hidden="true" hidden></span>
         <div class="ref-controls">
           <button class="ref-control" id="story-prev" type="button" aria-label="Previous testimonial"><svg aria-hidden="true"><use href="#arrow"/></svg></button>
           <button class="ref-control ref-control-next" id="story-next" type="button" aria-label="Next testimonial"><svg aria-hidden="true"><use href="#arrow"/></svg></button>
@@ -199,33 +199,33 @@
       </div>
       <div class="ref-journal-grid" id="journal-slider" data-lenis-prevent-horizontal role="region" aria-label="Dental blog articles" tabindex="0">
         <button class="ref-article" type="button" data-article="0">
-          <span class="ref-article-visual"><img src="assets/reference/journal-exam.jpg" alt="A dentist examining a patient" loading="lazy"><span class="ref-label">#DentalHealth</span></span>
-          <span class="ref-article-meta"><span class="ref-article-author"><img src="assets/reference/about-woman.jpg" alt="" loading="lazy"><span>Sarah Johnson<small>10 Min read</small></span></span><time datetime="2026-03-12">March 12, 2026</time></span>
+          <span class="ref-article-visual"><img src="assets/reference/journal-exam.webp" alt="A dentist examining a patient" loading="lazy"><span class="ref-label">#DentalHealth</span></span>
+          <span class="ref-article-meta"><span class="ref-article-author"><img src="assets/reference/about-woman.webp" alt="" loading="lazy"><span>Sarah Johnson<small>10 Min read</small></span></span><time datetime="2026-03-12">March 12, 2026</time></span>
           <strong>Professional Cleaning vs. Regular Brushing</strong><span class="ref-learn">Learn More</span>
         </button>
         <button class="ref-article" type="button" data-article="1">
-          <span class="ref-article-visual"><img src="assets/reference/journal-visit.jpg" alt="A patient receiving a dental examination" loading="lazy"><span class="ref-label">#DentalHealth</span></span>
-          <span class="ref-article-meta"><span class="ref-article-author"><img src="assets/reference/story-man.jpg" alt="" loading="lazy"><span>Nataly Birch<small>10 Min read</small></span></span><time datetime="2026-03-12">March 12, 2026</time></span>
+          <span class="ref-article-visual"><img src="assets/reference/journal-visit.webp" alt="A patient receiving a dental examination" loading="lazy"><span class="ref-label">#DentalHealth</span></span>
+          <span class="ref-article-meta"><span class="ref-article-author"><img src="assets/reference/story-man.webp" alt="" loading="lazy"><span>Nataly Birch<small>10 Min read</small></span></span><time datetime="2026-03-12">March 12, 2026</time></span>
           <strong>Important signs that indicate it’s time to visit dentist</strong><span class="ref-learn">Learn More</span>
         </button>
         <button class="ref-article" type="button" data-article="2">
-          <span class="ref-article-visual"><img src="assets/reference/journal-cleaning.jpg" alt="A close-up of dental instruments during a cleaning" loading="lazy"><span class="ref-label">#DentalHealth</span></span>
-          <span class="ref-article-meta"><span class="ref-article-author"><img src="assets/reference/story-woman.jpg" alt="" loading="lazy"><span>Cody Fisher<small>6 Min read</small></span></span><time datetime="2026-03-12">March 12, 2026</time></span>
+          <span class="ref-article-visual"><img src="assets/reference/journal-cleaning.webp" alt="A close-up of dental instruments during a cleaning" loading="lazy"><span class="ref-label">#DentalHealth</span></span>
+          <span class="ref-article-meta"><span class="ref-article-author"><img src="assets/reference/story-woman.webp" alt="" loading="lazy"><span>Cody Fisher<small>6 Min read</small></span></span><time datetime="2026-03-12">March 12, 2026</time></span>
           <strong>Professional Cleaning vs. Regular Brushing</strong><span class="ref-learn">Learn More</span>
         </button>
         <button class="ref-article" type="button" data-article="3">
-          <span class="ref-article-visual"><img src="assets/reference/about-patient.jpg" alt="A patient ready for a dental visit" loading="lazy"><span class="ref-label">#FirstVisit</span></span>
-          <span class="ref-article-meta"><span class="ref-article-author"><img src="assets/reference/about-woman.jpg" alt="" loading="lazy"><span>Sarah Johnson<small>5 Min read</small></span></span><time datetime="2026-03-12">March 12, 2026</time></span>
+          <span class="ref-article-visual"><img src="assets/reference/about-patient.webp" alt="A patient ready for a dental visit" loading="lazy"><span class="ref-label">#FirstVisit</span></span>
+          <span class="ref-article-meta"><span class="ref-article-author"><img src="assets/reference/about-woman.webp" alt="" loading="lazy"><span>Sarah Johnson<small>5 Min read</small></span></span><time datetime="2026-03-12">March 12, 2026</time></span>
           <strong>Preparing for Your First Dental Visit</strong><span class="ref-learn">Learn More</span>
         </button>
         <button class="ref-article" type="button" data-article="4">
-          <span class="ref-article-visual"><img src="assets/reference/benefit-patient.jpg" alt="A smiling patient speaking with a dentist" loading="lazy"><span class="ref-label">#SmileCare</span></span>
-          <span class="ref-article-meta"><span class="ref-article-author"><img src="assets/reference/story-man.jpg" alt="" loading="lazy"><span>Nataly Birch<small>4 Min read</small></span></span><time datetime="2026-03-12">March 12, 2026</time></span>
+          <span class="ref-article-visual"><img src="assets/reference/benefit-patient.webp" alt="A smiling patient speaking with a dentist" loading="lazy"><span class="ref-label">#SmileCare</span></span>
+          <span class="ref-article-meta"><span class="ref-article-author"><img src="assets/reference/story-man.webp" alt="" loading="lazy"><span>Nataly Birch<small>4 Min read</small></span></span><time datetime="2026-03-12">March 12, 2026</time></span>
           <strong>Questions to Ask About Teeth Whitening</strong><span class="ref-learn">Learn More</span>
         </button>
         <button class="ref-article" type="button" data-article="5">
-          <span class="ref-article-visual"><img src="assets/reference/consultation.jpg" alt="A dentist explaining dental care with a model" loading="lazy"><span class="ref-label">#FamilyCare</span></span>
-          <span class="ref-article-meta"><span class="ref-article-author"><img src="assets/reference/story-woman.jpg" alt="" loading="lazy"><span>Cody Fisher<small>5 Min read</small></span></span><time datetime="2026-03-12">March 12, 2026</time></span>
+          <span class="ref-article-visual"><img src="assets/reference/consultation.webp" alt="A dentist explaining dental care with a model" loading="lazy"><span class="ref-label">#FamilyCare</span></span>
+          <span class="ref-article-meta"><span class="ref-article-author"><img src="assets/reference/story-woman.webp" alt="" loading="lazy"><span>Cody Fisher<small>5 Min read</small></span></span><time datetime="2026-03-12">March 12, 2026</time></span>
           <strong>Building a Dental Care Routine for Your Family</strong><span class="ref-learn">Learn More</span>
         </button>
       </div>
@@ -299,7 +299,7 @@
   <dialog class="appointment-dialog" id="booking-dialog" aria-labelledby="booking-title">
     <button class="dialog-close" aria-label="Close appointment form"><svg><use href="#close"/></svg></button>
     <div class="booking-layout">
-      <div class="booking-visual"><img src="assets/clinic.jpg" alt="A calm dental clinic with modern equipment"><div class="booking-shade"></div><div class="cursor-light" aria-hidden="true"></div><a class="brand" href="#home" data-close-booking><svg><use href="#tooth"/></svg>Dentora</a><div class="booking-visual-copy"><span class="booking-kicker">A little care. A brighter smile.</span><h2>Good care starts<br> with a conversation.</h2><p>Tell us what you need.<br>We'll take it from here.</p></div><span class="booking-visual-footer">Your questions are always welcome.</span></div>
+      <div class="booking-visual"><img src="assets/clinic.webp" alt="A calm dental clinic with modern equipment"><div class="booking-shade"></div><div class="cursor-light" aria-hidden="true"></div><a class="brand" href="#home" data-close-booking><svg><use href="#tooth"/></svg>Dentora</a><div class="booking-visual-copy"><span class="booking-kicker">A little care. A brighter smile.</span><h2>Good care starts<br> with a conversation.</h2><p>Tell us what you need.<br>We'll take it from here.</p></div><span class="booking-visual-footer">Your questions are always welcome.</span></div>
       <div class="booking-panel"><p class="section-label"><span class="dot"></span> Your next chapter of care</p><h2 id="booking-title">Let's plan your visit.</h2><p class="booking-description">Explore the appointment form. Submissions are disabled in this preview.</p><div id="booking-form-slot"></div></div>
     </div>
   </dialog>
