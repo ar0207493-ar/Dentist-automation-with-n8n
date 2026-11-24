@@ -188,6 +188,9 @@
           clipPath: direction > 0 ? 'inset(0 0 var(--story-reveal-inset) 0)' : 'inset(var(--story-reveal-inset) 0 0 0)',
         });
         incoming.hidden = false;
+        // A requested slide must load even while the reveal layer is fully clipped.
+        incoming.loading = 'eager';
+        incoming.fetchPriority = 'high';
         incoming.src = source;
         incoming.decode().catch(() => {}).then(() => {
           if (active && imageRevisions.get(photo) === revision) revealStory(photo, incoming, source, revision, direction);
