@@ -877,4 +877,4 @@ body.menu-open { overflow: hidden; }
 @media (prefers-reduced-motion: reduce) { .ref-social-glyph { transition: none; } }
 
 .ref-comparison-label { display: inline-flex; align-items: center; gap: .45em; }
-.ref-tag-dot { display: block; width: 8px; height: 8px; flex: 0 0 8px; color: inherit; fill: currentColor; }
+.ref-tag-dot { display: block; width: 12px; height: 12px; flex: 0 0 12px; color: inherit; fill: currentColor; }
