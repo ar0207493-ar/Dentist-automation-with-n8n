@@ -368,7 +368,7 @@
           clearProps: 'opacity,transform', onComplete: () => split?.revert(),
         });
       });
-      document.querySelectorAll('.ref-footer-columns > div, .ref-footer-main > form, .ref-footer-bottom').forEach(group => {
+      document.querySelectorAll('.ref-footer-columns > div, .ref-footer-connect, .ref-footer-bottom').forEach(group => {
         const actions = [...group.children].filter(child => !child.matches('h2, h3, small'));
         gsap.from(actions, {
           opacity: 0, y: 24, duration: 0.5, stagger: 0.07, ease: 'power2.out',
@@ -388,7 +388,7 @@
         '.ref-doctor-copy p', '.ref-treatment-panel dt', '.ref-progress-title > span',
         '.ref-benefit p', '.ref-benefit-faces > span', '.ref-comparison-heading p',
         '.ref-story figcaption > span', '.ref-article-meta small', '.ref-article-meta time',
-        '.ref-learn', '.ref-faq-intro > p', '.ref-footer-intro > p', '.ref-footer-social > span', '.ref-footer form small',
+        '.ref-learn', '.ref-faq-intro > p', '.ref-newsletter-description', '.ref-footer-intro > p', '.ref-footer-social > span', '.ref-footer form small',
       ].join(','))];
       const headingSet = new Set(headings);
       const activeSplits = new Set();

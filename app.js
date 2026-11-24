@@ -2,6 +2,16 @@ const $ = (selector, scope = document) => scope.querySelector(selector);
 const $$ = (selector, scope = document) => [...scope.querySelectorAll(selector)];
 $$('.ref-footer-social a[href="#"]').forEach(link => {
   link.addEventListener('click', event => event.preventDefault());
+  const icon = link.querySelector('svg');
+  if (!icon) return;
+  const frame = document.createElement('span');
+  frame.className = 'ref-social-roll';
+  frame.setAttribute('aria-hidden', 'true');
+  const glyph = document.createElement('span');
+  glyph.className = 'ref-social-glyph';
+  glyph.append(icon);
+  frame.append(glyph, glyph.cloneNode(true));
+  link.append(frame);
 });
 // Share the menu's rolling label with service pills and footer actions.
 $$('.ref-hero-services button, .ref-footer-columns a, .ref-footer-columns button, .ref-footer-bottom button').forEach(action => {
