@@ -270,7 +270,9 @@ html.lenis { scroll-behavior: auto !important; }
 
 .ref-section { padding-inline: max(var(--ref-content-gutter), calc((100% - var(--ref-content-width)) / 2)); }
 .ref-label {
-  display: inline-block;
+  display: inline-flex;
+  align-items: center;
+  gap: .45em;
   width: fit-content;
   padding: .65em 1.05em;
   border: 1.2px solid #27a8c1;
@@ -873,3 +875,6 @@ body.menu-open { overflow: hidden; }
 .ref-footer-social a:is(:hover,:focus-visible) .ref-social-glyph:first-child { transform: translateY(-100%); }
 .ref-footer-social a:is(:hover,:focus-visible) .ref-social-glyph + .ref-social-glyph { transform: translateY(0); }
 @media (prefers-reduced-motion: reduce) { .ref-social-glyph { transition: none; } }
+
+.ref-comparison-label { display: inline-flex; align-items: center; gap: .45em; }
+.ref-tag-dot { display: block; width: 8px; height: 8px; flex: 0 0 8px; color: inherit; fill: currentColor; }

@@ -54,7 +54,7 @@
 `,
     appointment: `
 <div class="ref-visit-intro">
-        <span class="ref-label">Plan your visit</span>
+        <span class="ref-label"><svg class="ref-tag-dot" viewBox="0 0 8 8" aria-hidden="true" focusable="false"><circle cx="4" cy="4" r="3" fill="currentColor"/></svg>Plan your visit</span>
         <h2 id="visit-title">A healthier smile<br>starts here.</h2>
         <p>Whether you're visiting for a routine checkup, exploring treatment options or returning after some time, we're here to help you feel prepared.</p>
         <p>Share your preferred service and time, along with any questions or concerns. Your comfort, needs and dental care goals come first.</p>
