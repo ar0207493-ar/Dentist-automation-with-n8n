@@ -1,6 +1,8 @@
 html.lenis { scroll-behavior: auto !important; }
 
 .reference-page {
+  --font: 'Jost', Arial, sans-serif;
+  --display: 'Jost', Arial, sans-serif;
   --ref-aqua: #27a8c1;
   --ref-ink: #101213;
   --ref-subtle: #626769;
@@ -358,8 +360,8 @@ html.lenis { scroll-behavior: auto !important; }
 }
 .ref-about-inline-photo { --about-photo-width: 2em; position: relative; display: inline-block; width: calc(var(--about-photo-width) * var(--about-photo-progress, 1)); height: .88em; margin-inline: calc(.1em + .06em * var(--about-photo-progress, 1)); vertical-align: middle; transform: translateY(-.1em); border-radius: .18em; overflow: hidden; -webkit-text-stroke: 0; }
 .ref-about-inline-photo img { position: absolute; left: 50%; top: 0; transform: translateX(-50%); width: var(--about-photo-width); max-width: none; height: 100%; object-fit: cover; object-position: center 30%; }
-.ref-about-inline-photo img[src$="treatment.webp"] { object-position: center 44%; }
-.ref-about-inline-photo img[src$="journal-cleaning.webp"] { object-position: 62% 35%; }
+.ref-about-inline-photo img[src$="inline-aligner.webp"] { object-position: center 44%; }
+.ref-about-inline-photo img[src$="inline-cleaning.webp"] { object-position: 62% 35%; }
 .ref-about-bottom { display: grid; grid-template-columns: minmax(0, 1fr) 34%; align-items: end; gap: 5%; margin-top: clamp(24px, 3vw, 48px); }
 .ref-about-bottom > img { width: 100%; height: auto; aspect-ratio: 1.55; border-radius: var(--ref-card-radius); }
 .ref-metrics { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: .75rem; margin: clamp(15px, 2vw, 32px) 0 0; }
@@ -379,7 +381,7 @@ html.lenis { scroll-behavior: auto !important; }
 .ref-rating span { color: #eab752; margin-right: .3em; }
 .ref-doctor-copy button { margin-top: .85em; }
 .ref-treatment-photo { position: relative; min-height: clamp(360px, 47vw, 740px); align-self: stretch; border-radius: var(--ref-card-radius); overflow: hidden; background: #bccbca; }
-.ref-treatment-photo > img { position: absolute; inset: 0; width: 100%; height: 83%; object-fit: cover; object-position: center 45%; }
+.ref-treatment-photo > img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: center 45%; }
 .ref-treatment-panel { position: absolute; inset: auto 4% 3% 4%; padding: 4%; background: #fff; border-radius: var(--ref-card-radius); box-shadow: 0 0 0 1px #b7c9c7; }
 .ref-treatment-panel dl { display: grid; grid-template-columns: 1fr 1fr; margin: 0; }
 .ref-treatment-panel dl > div { padding: 0 .42em .65em; }
@@ -623,7 +625,7 @@ html.lenis { scroll-behavior: auto !important; }
 .ref-comparison-handle > span { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); display: grid; place-items: center; width: 48px; height: 48px; background: #27a8c1; color: #fff; border: 2px solid #fff; border-radius: 50%; font-size: 24px; }
 .ref-comparison-handle svg { display: block; width: 24px; height: 24px; }
 .ref-comparison-frame input { position: absolute; inset: 0; width: 100%; height: 100%; margin: 0; opacity: 0; cursor: ew-resize; }
-.ref-comparison-frame:focus-within { outline: 3px solid #188c99; outline-offset: 4px; }
+.ref-comparison-frame:has(input:focus-visible) { outline: 3px solid #188c99; outline-offset: 4px; }
 .ref-comparison-note { margin-top: .75rem; color: var(--ref-subtle); font-size: 13px; }
 
 body :is(button, .button, .ref-button):is(:hover, :focus, :active),
@@ -878,3 +880,17 @@ body.menu-open { overflow: hidden; }
 
 .ref-comparison-label { display: inline-flex; align-items: center; gap: .45em; }
 .ref-tag-dot { display: block; width: 12px; height: 12px; flex: 0 0 12px; color: inherit; fill: currentColor; }
+
+.hero-title-line { display: block; }
+@media (prefers-reduced-motion: no-preference) {
+  .ref-hero :is(.ref-header,.hero-title-line,.hero-description,.ref-hero-book,.ref-preview-card > span:last-child,.ref-hero-services button,.ref-hero-caption) { animation: ref-hero-enter .32s cubic-bezier(.16,1,.3,1) both; }
+  .ref-hero .hero-title-line + .hero-title-line { animation-delay: .04s; }
+  .ref-hero .hero-description { animation-delay: .06s; }
+  .ref-hero .ref-hero-book { animation-delay: .09s; }
+  .ref-hero .ref-hero-services button { animation-delay: .12s; }
+  .ref-hero .ref-hero-caption { animation-delay: .14s; }
+}
+@keyframes ref-hero-enter { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: none; } }
+
+.ref-rating > span { display: inline-flex; vertical-align: -.12em; }
+.ref-rating svg { display: block; width: 1em; height: 1em; }

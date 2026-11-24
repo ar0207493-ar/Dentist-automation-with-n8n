@@ -59,3 +59,7 @@ Facebook, Instagram, X and YouTube SVG paths are from [Simple Icons](https://git
 ## WebP delivery
 
 Raster photographs and the illustrative smile comparison are served as optimized WebP copies of the credited source assets. Original credits and licenses above continue to apply. The 22 delivered raster assets total approximately 1.72 MB, compared with 5.07 MB for their JPEG/PNG sources.
+
+## Self-hosted fonts
+
+DM Serif Display and Jost Latin WOFF2 subsets are served locally from `dist/assets/fonts/`. They are distributed under the SIL Open Font License; the original OFL notices are included beside the font files. Source: Google Fonts (`google/fonts`), with subsets delivered by `fonts.gstatic.com`.
