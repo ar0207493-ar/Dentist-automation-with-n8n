@@ -20,6 +20,7 @@
           <a class="ref-footer-brand" href="#home" aria-label="Dentora home"><svg aria-hidden="true"><use href="#tooth"/></svg>Dentora</a>
           <div class="ref-footer-intro">
             <h2>Thoughtful dental care.<br>A smile that feels like you.</h2>
+            <p>From everyday checkups to your next step in dental care, we make time to listen, answer your questions and help you feel comfortable.</p>
           </div>
 
         </div>
@@ -27,9 +28,8 @@
           <div><h3>Quick Links</h3><a href="about.html">About Us</a><a href="#services">Our Services</a><a href="#why">Why Choose Us</a><a href="#journal">Our Journal</a><a href="#faq">FAQs</a></div>
           <div class="ref-footer-contact">
             <h3>Contact Info</h3><button type="button" data-book>Book an Appointment</button><a class="ref-footer-email" href="mailto:dentora@example.com">dentora@example.com</a>
-            <div class="ref-footer-branches" aria-label="Our two branches">
+            <div class="ref-footer-branches" aria-label="Our clinic address">
               <address><strong>Downtown Branch</strong><span>24 Smile Avenue, Suite 101<br>Example City, NY 10001</span><a href="tel:+12025550147">+1 (202) 555-0147</a></address>
-              <address><strong>Riverside Branch</strong><span>18 Care Street, Suite 202<br>Example City, NY 10002</span><a href="tel:+12025550186">+1 (202) 555-0186</a></address>
             </div>
 
           </div>
