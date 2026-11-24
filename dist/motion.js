@@ -112,86 +112,12 @@
   // Both pages share Lenis, the logo and form reveals; page-specific scenes start below.
   if (document.body.dataset.page === 'about') return;
 
-  media.add('(prefers-reduced-motion: no-preference)', context => {
-    const title = document.querySelector('#hero-title');
-    const description = document.querySelector('.hero-description');
-    const button = document.querySelector('.ref-hero-book');
-    const header = document.querySelector('.ref-header');
-    const services = document.querySelectorAll('.ref-hero-services button');
-    const ticker = document.querySelector('.ref-hero-caption');
-    const preview = document.querySelector('.ref-preview-card > span:last-child');
-    const heroCopy = [header, title, description, button, preview, ...services, ticker];
-    let active = true;
-    let titleSplit;
-    let descriptionSplit;
-    let descriptionMarkup;
-    const restoreCopy = () => {
-      titleSplit?.revert();
-      descriptionSplit?.revert();
-      if (descriptionMarkup) {
-        description.innerHTML = descriptionMarkup;
-        descriptionMarkup = undefined;
-      }
-    };
-
-    gsap.set(heroCopy, {visibility: 'hidden'});
-    const animateHero = context.add(null, () => {
-      titleSplit = window.SplitText?.create(title, {type: 'words,chars', tag: 'span', aria: 'auto'});
-      const desktopBreak = description.querySelector('.ref-desktop-break');
-      if (window.SplitText && getComputedStyle(desktopBreak).display === 'none') {
-        // SplitText treats a hidden <br> as a line break.
-        descriptionMarkup = description.innerHTML;
-        desktopBreak.remove();
-      }
-      descriptionSplit = window.SplitText?.create(description, {
-        type: 'lines', tag: 'span', linesClass: 'hero-description-line', aria: 'auto',
-      });
-      const letters = titleSplit?.chars ?? title.querySelectorAll('.hero-title-line');
-      const lines = descriptionSplit?.lines ?? description;
-
-      gsap.set(letters, {y: 50, opacity: 0});
-      gsap.set(lines, {clipPath: 'inset(0 100% 0 0)'});
-      gsap.set(button, {y: 24, opacity: 0});
-      gsap.set([header, preview, ...services, ticker], {y: 24, opacity: 0});
-      gsap.set(heroCopy, {clearProps: 'visibility'});
-
-      // Overlap the entrances so the whole banner settles in about half a second.
-      gsap.timeline({onComplete: restoreCopy})
-        .to(header, {
-          y: 0, opacity: 1, duration: 0.2, ease: 'power2.out', clearProps: 'opacity,transform',
-        }, 0)
-        .to(letters, {
-          y: 0, opacity: 1, stagger: 0.003, duration: 0.3, ease: 'back.out(1.7)',
-          clearProps: 'opacity,transform',
-        }, 0.03)
-        .to(lines, {
-          clipPath: 'inset(0 0% 0 0)', duration: 0.22, stagger: 0.035, ease: 'power3.inOut',
-          clearProps: 'clipPath',
-        }, 0.1)
-        .to(button, {
-          y: 0, opacity: 1, duration: 0.2, ease: 'power2.out',
-          clearProps: 'opacity,transform',
-        }, 0.18)
-        .to([preview, ...services], {
-          y: 0, opacity: 1, duration: 0.22, stagger: 0.015, ease: 'power2.out',
-          clearProps: 'opacity,transform',
-        }, 0.22)
-        .to(ticker, {
-          y: 0, opacity: 1, duration: 0.18, ease: 'power2.out', clearProps: 'opacity,transform',
-        }, 0.26);
-    });
-
-    document.fonts.ready.then(() => {
-      if (active) animateHero();
-    });
-    return () => {
-      active = false;
-      restoreCopy();
-    };
-  });
+  // Hero entrances use native CSS so the first screen never waits for text splitting.
 
   media.add('(prefers-reduced-motion: no-preference)', context => {
-    const overlayPhoto = '.ref-article-visual, .ref-benefit-photo, .ref-preview-visual, .ref-visit-photo, .ref-comparison-frame';
+    const overlayPhoto = '.ref-treatment-photo, .ref-article-visual, .ref-benefit-photo, .ref-preview-visual, .ref-visit-photo, .ref-comparison-frame';
+    const treatmentPanel = document.querySelector('.ref-treatment-panel');
+    gsap.from(treatmentPanel, {opacity: 0, y: 20, duration: .65, clearProps: 'opacity,transform', scrollTrigger: {trigger: treatmentPanel, start: 'top 90%', once: true}});
     const images = [...document.querySelectorAll('.reference-site img:not(.hero-photo, .ref-about-inline-photo img, .ref-story-incoming), .booking-visual img')].filter(image => !image.closest(overlayPhoto));
     document.querySelectorAll('.ref-benefit-photo > div').forEach(copy => gsap.from(copy, {opacity: 0, y: 20, duration: .65, clearProps: 'opacity,transform', scrollTrigger: {trigger: copy.parentElement, start: 'top 88%', once: true}}));
     const imageGroups = new Map();
@@ -357,16 +283,19 @@
       };
     });
 
-    media.add('(prefers-reduced-motion: no-preference)', () => {
+    media.add('(prefers-reduced-motion: no-preference)', context => {
       const splits = [];
       document.querySelectorAll('.ref-journal-header h2, .ref-footer-top h2').forEach(heading => {
-        const split = window.SplitText?.create(heading, {type: 'lines', tag: 'span', aria: 'auto'});
-        if (split) splits.push(split);
-        gsap.from(split?.lines || heading, {
-          opacity: 0, y: 32, duration: 0.6, stagger: 0.1, ease: 'power2.out',
-          scrollTrigger: {trigger: heading, start: 'top 85%', once: true},
-          clearProps: 'opacity,transform', onComplete: () => split?.revert(),
+        // Measure and split offscreen headings only when the visitor reaches them.
+        const enter = context.add(null, () => {
+          const split = window.SplitText?.create(heading, {type: 'lines', tag: 'span', aria: 'auto'});
+          if (split) splits.push(split);
+          gsap.from(split?.lines || heading, {
+            opacity: 0, y: 32, duration: 0.6, stagger: 0.1, ease: 'power2.out',
+            clearProps: 'opacity,transform', onComplete: () => split?.revert(),
+          });
         });
+        ScrollTrigger.create({trigger: heading, start: 'top 85%', once: true, onEnter: enter});
       });
       document.querySelectorAll('.ref-footer-columns > div, .ref-footer-connect, .ref-footer-bottom').forEach(group => {
         const actions = [...group.children].filter(child => !child.matches('h2, h3, small'));
@@ -499,7 +428,6 @@
           scrollTrigger: {trigger: section, start: 'top 80%', once: true},
         });
       });
-      window.addEventListener('load',() => ScrollTrigger.refresh(),{once:true});
       ScrollTrigger.refresh();
       return () => {
         aboutWords?.revert();

@@ -21,3 +21,7 @@ python -m http.server 4173 --directory dist
 GitHub Pages serves the root of the `gh-pages` branch. It contains the contents of `dist/` plus `.nojekyll`; only static frontend files are deployed.
 
 See `THIRD-PARTY.md` for image, icon, font and animation credits.
+
+## Styles
+
+After editing shared CSS, run `python build_styles.py` to rebuild `dist/site.css` and its cache version. The published output is static; there is no runtime build. Fonts are self-hosted WOFF2 subsets, and the hero/preview use responsive WebP images.
