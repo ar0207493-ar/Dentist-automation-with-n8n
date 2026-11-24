@@ -398,8 +398,8 @@ html.lenis { scroll-behavior: auto !important; }
 .ref-benefits.is-scroll-driven .ref-benefits-stage { position: sticky; top: var(--benefit-top, 16px); }
 .ref-benefits-header { display: flex; align-items: center; padding-inline: clamp(20px, 2vw, 36px); }
 .ref-controls { display: flex; gap: .4rem; align-items: center; }
-.ref-control { display: grid; place-items: center; width: clamp(38px, 4.5vw, 66px); height: clamp(30px, 3.1vw, 47px); color: #111; background: #fff; border: 1px solid #e8e8e8; border-radius: 999px; }
-.ref-control svg { width: 1.1em; height: 1.1em; transform: rotate(180deg); }
+.ref-control { display: grid; place-items: center; width: clamp(38px, 4.5vw, 66px); height: clamp(30px, 3.1vw, 47px); color: #111; background: #fff; border: 1px solid #e8e8e8; border-radius: 999px; transition: color .25s ease, border-color .25s ease, background-color .25s ease; }
+.ref-control svg { width: 1.1em; height: 1.1em; transform: rotate(180deg); transition: transform .25s cubic-bezier(.16,1,.3,1); }
 .ref-control-next { background: #fff; color: #111; }
 .ref-control-next svg { transform: none; }
 .ref-control:is(:hover, :focus-visible):not(:disabled) { background: #fff; color: var(--ref-aqua); border-color: var(--ref-aqua); }
@@ -894,3 +894,7 @@ body.menu-open { overflow: hidden; }
 
 .ref-rating > span { display: inline-flex; vertical-align: -.12em; }
 .ref-rating svg { display: block; width: 1em; height: 1em; }
+
+.ref-control:is(:hover,:focus-visible):not(:disabled) svg { transform: translateX(-3px) rotate(180deg); }
+.ref-control-next:is(:hover,:focus-visible):not(:disabled) svg { transform: translateX(3px); }
+@media (prefers-reduced-motion: reduce) { .ref-control, .ref-control svg { transition: none; } }
