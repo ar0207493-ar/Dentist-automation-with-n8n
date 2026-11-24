@@ -55,3 +55,7 @@ DM Sans, DM Serif Display, Inter, Jost, and Manrope, served through Google Fonts
 ## Social icons
 
 Facebook, Instagram, X and YouTube SVG paths are from [Simple Icons](https://github.com/simple-icons/simple-icons), distributed under [CC0](https://github.com/simple-icons/simple-icons/blob/develop/LICENSE.md). Local source SVGs are in `dist/assets/icons/`; shared footer markup inlines the paths for theme-aware styling. Brand trademarks remain with their owners.
+
+## WebP delivery
+
+Raster photographs and the illustrative smile comparison are served as optimized WebP copies of the credited source assets. Original credits and licenses above continue to apply. The 22 delivered raster assets total approximately 1.72 MB, compared with 5.07 MB for their JPEG/PNG sources.

@@ -52,16 +52,17 @@ function closeSlidingPanel(panel, close) {
   slide.finished.then(finish, finish);
 }
 
-function openBooking(service, trigger) {
-  const source = trigger || document.activeElement;
-  lastTrigger = mobileNav.contains(source) ? menuToggle : source;
+function openBooking(service) {
   if (contentDialog.open) contentDialog.close();
-  if (service) appointmentForm.elements.service.value = service;
   closeMenu();
-  $('#booking-form-slot').append(appointmentForm);
-  if (!bookingDialog.open) bookingDialog.showModal();
-  document.body.classList.add('modal-open');
-  appointmentForm.elements.name.focus({preventScroll:true});
+  const form = $('#visit-form');
+  if (service && [...form.elements.service.options].some(option => option.value === service)) {
+    form.elements.service.value = service;
+    form.elements.service.dispatchEvent(new Event('change', {bubbles: true}));
+  }
+  const target = $('#appointment');
+  const request = new CustomEvent('dentora:scroll-to', {detail: target, cancelable: true});
+  if (document.dispatchEvent(request)) target.scrollIntoView({behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'instant' : 'smooth'});
 }
 
 function closeBooking() {
@@ -153,6 +154,86 @@ $$('form').forEach(form => {
   form.noValidate = true;
 });
 
+// Theme-aware listboxes retain their native select values without submitting data.
+const customSelects = [];
+$$('.ref-visit-fields select').forEach((select, index) => {
+  const label = select.closest('label');
+  const name = label.firstChild.textContent.trim();
+  const wrapper = document.createElement('span');
+  wrapper.className = 'ref-select';
+  select.before(wrapper);
+  wrapper.append(select);
+  select.hidden = true;
+  const toggle = document.createElement('button');
+  toggle.type = 'button';
+  toggle.className = 'ref-select-toggle';
+  toggle.setAttribute('role', 'combobox');
+  toggle.setAttribute('aria-label', name);
+  toggle.setAttribute('aria-haspopup', 'listbox');
+  toggle.setAttribute('aria-expanded', 'false');
+  const list = document.createElement('ul');
+  list.className = 'ref-select-options';
+  list.id = 'visit-options-' + index;
+  list.setAttribute('role', 'listbox');
+  list.setAttribute('aria-label', name);
+  list.hidden = true;
+  toggle.setAttribute('aria-controls', list.id);
+  const options = [...select.options].map((option, item) => {
+    const row = document.createElement('li');
+    row.id = list.id + '-' + item;
+    row.setAttribute('role', 'option');
+    row.textContent = option.textContent;
+    list.append(row);
+    row.addEventListener('pointerdown', event => event.preventDefault());
+    row.addEventListener('click', () => choose(item));
+    return row;
+  });
+  wrapper.append(toggle, list);
+  let active = select.selectedIndex;
+  const render = () => {
+    toggle.textContent = select.options[select.selectedIndex].textContent;
+    options.forEach((row, item) => {
+      row.setAttribute('aria-selected', String(item === select.selectedIndex));
+      row.classList.toggle('is-active', item === active);
+    });
+    if (!list.hidden) toggle.setAttribute('aria-activedescendant', options[active].id);
+  };
+  const close = () => {
+    list.hidden = true;
+    toggle.setAttribute('aria-expanded', 'false');
+    toggle.removeAttribute('aria-activedescendant');
+  };
+  const open = () => {
+    customSelects.forEach(control => control.close());
+    active = select.selectedIndex;
+    list.hidden = false;
+    toggle.setAttribute('aria-expanded', 'true');
+    render();
+  };
+  function choose(item) {
+    select.selectedIndex = item;
+    active = item;
+    select.dispatchEvent(new Event('change', {bubbles: true}));
+    close();
+    toggle.focus({preventScroll: true});
+  }
+  toggle.addEventListener('click', () => list.hidden ? open() : close());
+  toggle.addEventListener('keydown', event => {
+    if (['ArrowDown', 'ArrowUp', 'Home', 'End', 'Enter', ' ', 'Escape'].includes(event.key)) event.preventDefault();
+    if (event.key === 'Escape' || event.key === 'Tab') { close(); return; }
+    if (event.key === 'Enter' || event.key === ' ') { list.hidden ? open() : choose(active); return; }
+    if (!['ArrowDown', 'ArrowUp', 'Home', 'End'].includes(event.key)) return;
+    if (list.hidden) open();
+    active = event.key === 'Home' ? 0 : event.key === 'End' ? options.length - 1 : Math.max(0, Math.min(options.length - 1, active + (event.key === 'ArrowDown' ? 1 : -1)));
+    render();
+    options[active].scrollIntoView({block: 'nearest'});
+  });
+  select.addEventListener('change', render);
+  document.addEventListener('pointerdown', event => { if (!wrapper.contains(event.target)) close(); });
+  customSelects.push({close});
+  render();
+});
+
 const benefitTrack = $('#benefit-track');
 const faqItems = $$('.ref-faq-item');
 const faqMotion = matchMedia('(prefers-reduced-motion: no-preference)');
@@ -230,11 +311,11 @@ window.addEventListener('resize', settleFaqAnimations);
 faqMotion.addEventListener('change', settleFaqAnimations);
 const smileComparison = $('#smile-comparison');
 const comparisonRange = $('#smile-comparison-range');
-function updateComparison(value) {
+function updateComparison(value, duration = .16) {
   const position = Math.max(0, Math.min(100, Number(value)));
   comparisonRange.value = position;
   if (window.gsap && !matchMedia('(prefers-reduced-motion: reduce)').matches) {
-    gsap.to(smileComparison, {'--comparison': position + '%', duration: 0.1, overwrite: 'auto'});
+    gsap.to(smileComparison, {'--comparison': position + '%', duration, ease: 'power2.out', overwrite: 'auto'});
   } else {
     smileComparison.style.setProperty('--comparison', position + '%');
   }
@@ -245,6 +326,13 @@ smileComparison?.addEventListener('pointermove', event => {
   updateComparison((event.clientX - bounds.left) / bounds.width * 100);
 });
 comparisonRange?.addEventListener('input', () => updateComparison(comparisonRange.value));
+const resetComparison = () => updateComparison(50, .5);
+smileComparison?.addEventListener('pointerleave', resetComparison);
+smileComparison?.addEventListener('pointerup', resetComparison);
+smileComparison?.addEventListener('pointercancel', resetComparison);
+comparisonRange?.addEventListener('change', resetComparison);
+comparisonRange?.addEventListener('blur', resetComparison);
+
 
 if (benefitTrack) {
 function scrollBenefitsTo(target) {
@@ -337,22 +425,26 @@ if (window.ResizeObserver) {
 
 if ($('#stories')) {
 const stories = [
-  {name:'Savannah Nguyen', kind:'Medical Assistant', image:'reference/story-woman.jpg', quote:$('#story-quote').textContent},
-  {name:'Alex R.', kind:'Care for the whole family', image:'reference/story-man.jpg', quote:'A warm welcome and time for all our questions. It made a visit with the whole family feel much more manageable.'},
-  {name:'Jamie L.', kind:'A fresh start for my smile', image:'reference/about-woman.jpg', quote:'No pressure, just a clear conversation about my options. Having a plan helped me take that first step.'}
+  {name:'Savannah Nguyen', kind:'Medical Assistant', image:'reference/story-woman.webp', quote:$('#story-quote').textContent},
+  {name:'Alex R.', kind:'Care for the whole family', image:'reference/story-man.webp', quote:'A warm welcome and time for all our questions. It made a visit with the whole family feel much more manageable.'},
+  {name:'Jamie L.', kind:'A fresh start for my smile', image:'reference/about-woman.webp', quote:'No pressure, just a clear conversation about my options. Having a plan helped me take that first step.'}
 ];
 let storyIndex = 0;
 function moveStory(direction) {
   storyIndex = (storyIndex + direction + stories.length) % stories.length;
   const story = stories[storyIndex];
-  $('#story-quote').textContent = story.quote;
-  $('#story-person').textContent = story.name;
-  $('#story-kind').textContent = story.kind + ' · Sample testimonial';
+  const applyCopy = () => {
+    $('#story-quote').textContent = story.quote;
+    $('#story-person').textContent = story.name;
+    $('#story-kind').textContent = story.kind + ' · Sample testimonial';
+  };
   const sources = {
     preview: 'assets/' + stories[(storyIndex + 1) % stories.length].image,
     avatar: 'assets/' + story.image,
+    direction, applyCopy,
   };
   if ($('#stories').dispatchEvent(new CustomEvent('dentora:story-change', {detail: sources, cancelable: true}))) {
+    applyCopy();
     $('#story-preview').src = sources.preview;
     $('#story-avatar').src = sources.avatar;
   }
@@ -412,16 +504,14 @@ function showContent(category, title, body, trigger) {
 
 $('#hero-film')?.addEventListener('click', event => {
   showContent('Welcome to Dentora', 'Good care starts with feeling comfortable.',
-    '<video class="ref-preview-video" controls autoplay playsinline preload="metadata" poster="assets/dental-poster.jpg" aria-label="Dental care film"><source src="assets/dental-banner.mp4" type="video/mp4"></video>', event.currentTarget);
+    '<video class="ref-preview-video" controls autoplay playsinline preload="metadata" poster="assets/dental-poster.webp" aria-label="Dental care film"><source src="assets/dental-banner.mp4" type="video/mp4"></video>', event.currentTarget);
 });
 contentDialog.addEventListener('close', () => {
   if (!contentDialog.open) $('#content-body').replaceChildren();
 });
 
-$$('[data-article]').forEach(button => button.addEventListener('click', () => {
-  const article = articles[Number(button.dataset.article)];
-  showContent(article.category, article.title, article.body, button);
-}));
+// Article previews stay on the page instead of opening placeholder popups.
+$$('[data-article]').forEach(button => button.addEventListener('click', event => event.preventDefault()));
 const infoPages = {
   faq: {title:'Frequently asked questions', body:'<h3>How do I request a visit?</h3><p>Use Book an Appointment and enter your preferred date. The clinic will contact you to confirm availability.</p><h3>Can I call instead?</h3><p>Use the clinic’s phone number in Contact Us.</p>'},
   'not-found': {title:'Page not found', body:'<p>Return to the <a href="#home" data-close-content>homepage</a> to explore services and articles.</p>'},
@@ -439,6 +529,7 @@ $('#content-body').addEventListener('click', event => {
   }
 });
 $$('[data-info]').forEach(button => button.addEventListener('click', () => {
+  if (button.dataset.info === 'journal') { $('#journal-slider')?.scrollBy({left: $('#journal-slider').clientWidth, behavior: 'smooth'}); return; }
   const page = infoPages[button.dataset.info];
   if (page) {
     showContent('Dentora', page.title, page.body, button);

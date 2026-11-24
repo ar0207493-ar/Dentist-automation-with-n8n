@@ -51,7 +51,7 @@
         <h2 id="visit-title">A healthier smile<br>starts here.</h2>
         <p>Whether you're visiting for a routine checkup, exploring treatment options or returning after some time, we're here to help you feel prepared.</p>
         <p>Share your preferred service and time, along with any questions or concerns. Your comfort, needs and dental care goals come first.</p>
-        <figure class="ref-visit-photo"><img src="assets/reference/about-patient.jpg" alt="A patient feeling comfortable in a dental treatment room" width="1280" height="853" loading="lazy"><figcaption><svg aria-hidden="true"><use href="#tooth"/></svg><span>Your questions.<br>Our care and attention.</span></figcaption></figure>
+        <figure class="ref-visit-photo"><img src="assets/reference/about-patient.webp" alt="A patient feeling comfortable in a dental treatment room" width="1280" height="853" loading="lazy"><figcaption><svg aria-hidden="true"><use href="#tooth"/></svg><span>Your questions.<br>Our care and attention.</span></figcaption></figure>
       </div>
       <form class="ref-visit-form" id="visit-form" onsubmit="return false" novalidate aria-labelledby="visit-form-title">
         <h3 id="visit-form-title">Let's plan your appointment.</h3>
@@ -64,7 +64,7 @@
           <label>Preferred time<select name="time"><option value="">Choose a time</option><option>Morning · 9 am–12 pm</option><option>Afternoon · 12–4 pm</option><option>Evening · 4–6 pm</option></select></label>
           <label class="ref-visit-message">Your message <span>(optional)</span><textarea name="message" placeholder="Questions or anything you'd like us to know" rows="3"></textarea></label>
         </div>
-        <div class="ref-visit-action"><button class="ref-button ref-blue" type="button" disabled>Book an Appointment <span class="ref-circle" aria-hidden="true"><svg><use href="#arrow"/></svg></span></button></div>
+        <div class="ref-visit-action"><button class="ref-button ref-blue" type="button" data-preview-submit>Book an Appointment <span class="ref-circle" aria-hidden="true"><svg><use href="#arrow"/></svg></span></button></div>
       </form>
 `,
     menu: `
