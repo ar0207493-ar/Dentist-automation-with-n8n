@@ -110,7 +110,7 @@
     gsap.from('.ref-visit-action .ref-button', {opacity: 0, y: 20, duration: .65, clearProps: 'opacity,transform', scrollTrigger: {trigger: '.ref-visit-action', start: 'top 93%', once: true}});
   });
   // Both pages share Lenis, the logo and form reveals; page-specific scenes start below.
-  if (document.body.dataset.page === 'about') return;
+  if (document.body.dataset.page !== 'home') return;
 
   // Hero entrances use native CSS so the first screen never waits for text splitting.
 

@@ -50,7 +50,7 @@
             </div>
         </div>
       </div>
-      <div class="ref-footer-bottom"><span>© <span id="year"></span> Dentora. All Rights Reserved.</span><div><button type="button" data-info="terms">Terms &amp; Conditions</button><button type="button" data-info="privacy">Privacy Policy</button></div></div>
+      <div class="ref-footer-bottom"><span>© <span id="year"></span> Dentora. All Rights Reserved.</span><div><a href="terms.html">Terms &amp; Conditions</a><a href="privacy.html">Privacy Policy</a></div></div>
 `,
     appointment: `
 <div class="ref-visit-intro">
@@ -90,23 +90,27 @@
     <button class="ref-button ref-white" type="button" data-book>Book an Appointment</button>
 `
   };
-  const isHome = document.body.dataset.page === 'home';
-  const homeAnchors = new Set(['#home', '#services', '#stories', '#journal', '#why', '#faq']);
+  const page = document.body.dataset.page;
+  const route = {'#home': 'index.html', '#services': 'services.html', '#stories': 'reviews.html', '#journal': 'journal.html', '#appointment': 'contact.html', '#why': 'index.html#why', '#faq': 'faq.html'};
+  const activeRoute = {home: 'index.html', about: 'about.html', services: 'services.html', service: 'services.html', reviews: 'reviews.html', journal: 'journal.html', article: 'journal.html', contact: 'contact.html'}[page];
   for (const [name, template] of Object.entries(templates)) {
     const host = document.querySelector(`[data-site-${name}]`);
     if (!host) continue;
     host.innerHTML = template;
     host.querySelectorAll('a[href^="#"]').forEach(link => {
       const href = link.getAttribute('href');
-      if (!isHome && homeAnchors.has(href)) link.setAttribute('href', 'index.html' + href);
+      if (route[href]) link.setAttribute('href', route[href]);
     });
     host.querySelectorAll('.desktop-nav a, .ref-menu-links a').forEach(link => {
-      const active = link.getAttribute('href') === (isHome ? '#home' : 'about.html');
+      const active = link.getAttribute('href') === activeRoute;
       link.classList.toggle('active', active);
       if (active) link.setAttribute('aria-current', 'page');
       else link.removeAttribute('aria-current');
     });
   }
+  const service = document.body.dataset.appointmentService;
+  const serviceSelect = document.querySelector('#visit-form select[name="service"]');
+  if (service && serviceSelect) serviceSelect.value = service;
   // The published Home showcase keeps every link as a # placeholder.
   if (document.body.dataset.linkMode === 'placeholder') {
     const placeholderLinks = root => {
