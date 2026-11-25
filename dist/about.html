@@ -1,0 +1,179 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="Content-Security-Policy" content="connect-src 'none'; form-action 'none';">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#193e42">
+  <meta name="description" content="Get to know Dentora: a personal approach to dental care, clear conversations and a more comfortable first visit.">
+  <title>About Dentora — Dental care with a personal touch.</title>
+  <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+  <link rel="preload" href="assets/fonts/jost-latin-variable.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="assets/fonts/dm-serif-display-latin.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="site.css?v=bbbd30c54b">
+  <link rel="stylesheet" href="about.css?v=16fa24fe18">
+  <script src="assets/vendor/gsap.min.js" defer></script>
+  <script src="assets/vendor/ScrollTrigger.min.js" defer></script>
+  <script src="assets/vendor/DrawSVGPlugin.min.js" defer></script>
+  <script src="assets/vendor/lenis.min.js" defer></script>
+  <script src="assets/vendor/SplitText.min.js" defer></script>
+  <script src="shared-components.js?v=4d93ec8cd6" defer></script>
+  <script src="app.js?v=9d1f99c262" defer></script>
+  <script src="motion.js?v=48f8af72e8" defer></script>
+  <script src="about-motion.js?v=f39bb72c7d" defer></script>
+</head>
+<body class="reference-page about-page" data-page="about">
+  <svg class="svg-library" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"><defs>
+    <symbol id="tooth" viewBox="0 0 32 36"><path d="M16 4C12-1 3 1 3 9c0 4 2 7 3 10 1 4 1 13 4 14 4 1 3-13 6-13s2 14 6 13c3-1 3-10 4-14 1-3 3-6 3-10 0-8-9-10-13-5Z" fill="currentColor"/><path d="M10 8c2-2 5-1 7 0" fill="none" stroke="var(--tooth-line,#24565b)" stroke-width="1.8" stroke-linecap="round"/></symbol>
+    <symbol id="arrow" viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+    <symbol id="spark" viewBox="0 0 24 24"><path d="m12 2 2.6 7.4L22 12l-7.4 2.6L12 22l-2.6-7.4L2 12l7.4-2.6Z" fill="none" stroke="currentColor" stroke-width="1.5"/></symbol>
+    <symbol id="check" viewBox="0 0 24 24"><path d="m5 12 4 4L19 6" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+  <symbol id="close" viewBox="0 0 24 24"><path d="m6 6 12 12M18 6 6 18" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></symbol>
+<symbol id="mail" viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="14" rx="3" fill="none" stroke="currentColor" stroke-width="1.5"/><path d="m4 7 8 6 8-6" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/></symbol>
+<symbol id="phone" viewBox="0 0 24 24"><path d="M7 3H4a1 1 0 0 0-1 1c0 9.4 7.6 17 17 17a1 1 0 0 0 1-1v-3l-5-2-2 2a15 15 0 0 1-7-7l2-2-2-5Z" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/></symbol>
+<symbol id="calendar" viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="16" rx="3" fill="none" stroke="currentColor" stroke-width="1.5"/><path d="M7 3v4M17 3v4M3 11h18m-14 5h3m4 0h3" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></symbol>
+<symbol id="conversation" viewBox="0 0 24 24"><path d="M21 11.5a8.4 8.4 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.4 8.4 0 0 1-3.8-.9L3 21l1.9-5.7a8.4 8.4 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.4 8.4 0 0 1 3.8-.9h.5a8.5 8.5 0 0 1 8 8v.5Z" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/><path d="M8 10h9M8 14h6" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></symbol>
+<symbol id="care-plan" viewBox="0 0 24 24"><path d="M9 5H6a2 2 0 0 0-2 2v13a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-3" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/><rect x="9" y="2" width="6" height="5" rx="1" fill="none" stroke="currentColor" stroke-width="1.6"/><path d="m8 14 3 3 5-6" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+<symbol id="arrow-down" viewBox="0 0 24 24"><path d="M12 5v14m-6-6 6 6 6-6" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+</defs></svg>
+  <a class="skip-link" href="#main">Skip to content</a>
+  <main class="reference-site" id="main">
+    <section class="about-hero-shell" id="home" aria-labelledby="about-hero-title">
+      <div class="about-hero">
+        <img class="about-hero-background" src="assets/reference/benefit-patient.webp" alt="" aria-hidden="true" width="1280" height="853" fetchpriority="high" decoding="async">
+        <header class="site-header ref-header" data-site-header></header>
+        <div class="about-hero-copy">
+          <span class="ref-label about-hero-tag"><svg class="ref-tag-dot" viewBox="0 0 8 8" aria-hidden="true" focusable="false"><circle cx="4" cy="4" r="3" fill="currentColor"/></svg>About Dentora</span>
+          <h1 id="about-hero-title"><span>Dental care,</span> <span>built around you.</span></h1>
+          <p class="about-hero-lede">Get to know our approach to dental care. Clear explanations, time for your questions and a team that starts by listening.</p>
+        </div>
+        <div class="about-hero-bottom ref-hero-caption">
+          <div class="hero-marquee-viewport" role="group" aria-label="Dental services ticker">
+            <div class="hero-marquee-track"><div class="hero-marquee-copy"><span>Your Teeth Our Science</span><span>Dental Checkup</span><span>Teeth Cleaning</span><span>Tooth Filling</span><span>Gum Treatment</span><span>Retainers</span></div></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="ref-section about-section about-story" id="approach" aria-labelledby="about-story-title">
+      <div class="about-story-aside">
+        <span class="ref-label"><svg class="ref-tag-dot" viewBox="0 0 8 8" aria-hidden="true" focusable="false"><circle cx="4" cy="4" r="3" fill="currentColor"/></svg>The Dentora approach</span>
+        <figure class="about-story-photo about-frame" data-about-image><img src="assets/reference/consultation.webp" alt="A dentist explaining a dental model to a patient" width="1280" height="853" loading="lazy" decoding="async" fetchpriority="low"></figure>
+        <p class="about-photo-note">Care starts with a conversation.</p>
+      </div>
+      <div class="about-story-copy">
+        <h2 class="about-manifesto-text" id="about-story-title">Your story comes before your smile. We make room for your questions, your concerns and what matters to you.</h2>
+        <p class="about-copy-reveal">A checkup, a fresh start or a question you've been meaning to ask. Whatever brings you here, our approach begins with listening and making the next step easier to understand.</p>
+        <div class="about-story-notes">
+          <div><svg aria-hidden="true"><use href="#conversation"/></svg><h3>Time for your questions.</h3><p>Talk through your concerns with the dental team.</p></div>
+          <div><svg aria-hidden="true"><use href="#care-plan"/></svg><h3>A plan you understand.</h3><p>Discuss your options, treatment steps and costs.</p></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="ref-section about-section about-values" id="our-values" aria-labelledby="values-title">
+      <div class="about-section-heading">
+        <div><span class="ref-label"><svg class="ref-tag-dot" viewBox="0 0 8 8" aria-hidden="true" focusable="false"><circle cx="4" cy="4" r="3" fill="currentColor"/></svg>What matters to us</span><h2 id="values-title">Care that makes<br>space for you.</h2></div>
+        <p class="about-copy-reveal">Three things we keep coming back to, from your first hello to your next visit.</p>
+      </div>
+      <div class="about-value-grid">
+        <article class="about-value">
+          <img class="about-value-photo" src="assets/reference/hero-preview.webp" alt="" loading="lazy" width="1280" height="853" decoding="async">
+          <div class="about-value-content">
+            <h3 class="about-value-title"><button class="about-value-toggle" type="button" aria-expanded="false" aria-controls="value-listen">We listen first.</button></h3>
+            <div class="about-value-detail" id="value-listen" aria-hidden="true" inert><div><p>Tell us what you're hoping for, what feels difficult and what you'd like to know. Your experience is where the conversation starts.</p><span class="about-value-foot">A person before a patient.</span></div></div>
+          </div>
+        </article>
+        <article class="about-value">
+          <img class="about-value-photo" src="assets/reference/consultation.webp" alt="" loading="lazy" width="1280" height="853" decoding="async" fetchpriority="low">
+          <div class="about-value-content">
+            <h3 class="about-value-title"><button class="about-value-toggle" type="button" aria-expanded="false" aria-controls="value-clear">We keep it clear.</button></h3>
+            <div class="about-value-detail" id="value-clear" aria-hidden="true" inert><div><p>Dental care can bring a lot of questions. Our focus is on explaining the options, the next steps and the things you want to understand.</p><span class="about-value-foot">Understanding builds confidence.</span></div></div>
+          </div>
+        </article>
+        <article class="about-value">
+          <img class="about-value-photo" src="assets/reference/benefit-patient.webp" alt="" loading="lazy" width="1280" height="1000" decoding="async" fetchpriority="low">
+          <div class="about-value-content">
+            <h3 class="about-value-title"><button class="about-value-toggle" type="button" aria-expanded="false" aria-controls="value-pace">We respect your pace.</button></h3>
+            <div class="about-value-detail" id="value-pace" aria-hidden="true" inert><div><p>Feeling comfortable matters. Share your concerns with the team so your visit can begin with a conversation about what helps you feel at ease.</p><span class="about-value-foot">A little more room to breathe.</span></div></div>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <section class="ref-section about-section about-space" id="our-space" aria-labelledby="space-title">
+      <div class="about-section-heading">
+        <div><span class="ref-label"><svg class="ref-tag-dot" viewBox="0 0 8 8" aria-hidden="true" focusable="false"><circle cx="4" cy="4" r="3" fill="currentColor"/></svg>A calmer setting</span><h2 id="space-title">A space to slow down.<br>A reason to smile.</h2></div>
+        <p class="about-copy-reveal">Light, room to breathe and a conversation without pressure. The kind of setting we believe dental care deserves.</p>
+      </div>
+      <figure class="about-space-photo about-frame" data-about-image>
+        <img src="assets/reference/treatment-room.webp" alt="A bright dental treatment room with natural light" width="1600" height="1067" loading="lazy" decoding="async" fetchpriority="low">
+        <figcaption><span class="about-eyebrow">THE SMALL THINGS MATTER</span><h3>Feeling at ease<br>is part of the experience.</h3><p>Bring your questions. Tell us what would help.</p></figcaption>
+      </figure>
+    </section>
+
+    <section class="ref-section about-section about-journey" id="first-visit" aria-labelledby="journey-title">
+      <div class="about-journey-intro">
+        <span class="ref-label"><svg class="ref-tag-dot" viewBox="0 0 8 8" aria-hidden="true" focusable="false"><circle cx="4" cy="4" r="3" fill="currentColor"/></svg>Your first visit</span>
+        <h2 id="journey-title">Your first visit,<br>step by step.</h2>
+        <p class="about-copy-reveal">From your first question to a dental care plan you understand. Here's what to expect.</p>
+        <figure class="about-journey-photo about-frame" data-about-image>
+          <img src="assets/reference/journal-visit.webp" alt="A patient discussing her dental care with the team" width="1280" height="853" loading="lazy" decoding="async" fetchpriority="low">
+          <figcaption><button class="ref-button ref-white" type="button" data-book>Plan your first visit <span class="ref-circle" aria-hidden="true"><svg><use href="#arrow"/></svg></span></button></figcaption>
+        </figure>
+      </div>
+      <ol class="about-journey-steps" aria-label="Your first visit in three steps">
+        <li class="about-journey-step"><span class="about-step-line" aria-hidden="true"></span><span class="about-step-number" aria-hidden="true">01</span><div class="about-step-copy"><h3 class="about-step-title">Start with a conversation.</h3><p>Tell us what brings you in and request a time that works for you. The clinic will contact you to confirm availability.</p></div></li>
+        <li class="about-journey-step"><span class="about-step-line" aria-hidden="true"></span><span class="about-step-number" aria-hidden="true">02</span><div class="about-step-copy"><h3 class="about-step-title">Understand your options.</h3><p>Discuss your goals and assessment with the dental team. Ask about the proposed treatment, timing and costs.</p></div></li>
+        <li class="about-journey-step"><span class="about-step-number" aria-hidden="true">03</span><div class="about-step-copy"><h3 class="about-step-title">Plan your next step.</h3><p>Make time for your questions and talk through the plan with the team before deciding how you'd like to proceed.</p></div></li>
+      </ol>
+    </section>
+
+    <section class="ref-section ref-faq about-section about-faq" id="faq" aria-labelledby="about-faq-title">
+      <div class="ref-faq-intro"><span class="ref-label"><svg class="ref-tag-dot" viewBox="0 0 8 8" aria-hidden="true" focusable="false"><circle cx="4" cy="4" r="3" fill="currentColor"/></svg>A few helpful answers</span><h2 id="about-faq-title">Before we<br>say hello.</h2><p class="about-copy-reveal">Practical details to help you feel a little more prepared.</p><a class="ref-button ref-blue" href="faq.html">Explore all our FAQs <span class="ref-circle" aria-hidden="true"><svg><use href="#arrow"/></svg></span></a></div>
+      <div class="ref-faq-list">
+        <details class="ref-faq-item" name="dental-faq" open><summary>Can I ask questions before booking?<span aria-hidden="true"></span></summary><div class="ref-faq-answer"><p>Yes. You can call the team or use the appointment form to share what you'd like to discuss. Mention any concerns and the service you're interested in when you get in touch.</p></div></details>
+        <details class="ref-faq-item" name="dental-faq"><summary>What can I ask about at my first visit?<span aria-hidden="true"></span></summary><div class="ref-faq-answer"><p>Bring your questions about your teeth, previous dental care or treatment options. Ask the team to explain what the visit involves and any information they would like you to bring.</p></div></details>
+        <details class="ref-faq-item" name="dental-faq"><summary>How do I request an appointment?<span aria-hidden="true"></span></summary><div class="ref-faq-answer"><p>The appointment form shows the details normally needed to plan a visit, including your preferred service and time. This is a design preview; the form does not send requests or book appointments.</p></div></details>
+      </div>
+    </section>
+
+    <section class="ref-section ref-visit-section" id="appointment" aria-labelledby="visit-title" data-site-appointment></section>
+
+    <footer class="ref-footer" id="contact" data-site-footer></footer>
+  </main>
+
+
+  <div class="mobile-nav ref-mobile-nav" id="mobile-nav" role="dialog" aria-modal="true" aria-label="Mobile navigation" hidden data-site-menu></div>
+
+
+  <div hidden>
+      <form class="appointment-page-form" id="appointment-form" onsubmit="return false" novalidate>
+        <div class="appointment-fields">
+          <label>Your name<input class="input" name="name" autocomplete="name" placeholder="Full name" required maxlength="100"></label>
+          <label>Email address<input class="input" name="email" type="email" autocomplete="email" placeholder="you@example.com" required></label>
+          <label>Phone number<input class="input" name="phone" type="tel" autocomplete="tel" inputmode="tel" placeholder="Your phone number" pattern="[+0-9\(\)\s\-]{7,25}" maxlength="25" required></label>
+          <label>What do you need?<select class="input" name="service"><option>Dental checkup</option><option>Teeth cleaning</option><option>Restorative care</option><option>Tooth filling</option><option>Gum treatment</option><option>Retainers</option><option>Cosmetic consultation</option><option>Family appointment</option><option>I'm not sure yet</option></select></label>
+          <label>Preferred date<input class="input" name="date" type="date" required></label>
+          <label>Preferred time<select class="input" name="time"><option>Morning · 9 am–12 pm</option><option>Afternoon · 12–4 pm</option><option>Evening · 4–6 pm</option></select></label>
+          <label class="appointment-message">Anything we should know? <span>(optional)</span><textarea class="input" name="message" rows="3" maxlength="500" placeholder="Add a short note"></textarea></label>
+        </div>
+        <label class="form-trap" aria-hidden="true">Leave this field empty<input class="input" name="company" tabindex="-1" autocomplete="off"></label>
+        <div class="appointment-submit-row"><button class="button button-dark arrow-button" type="button" disabled>Book an Appointment <span class="circle-arrow"><svg><use href="#arrow"/></svg></span></button></div>
+        <p class="appointment-status" id="appointment-status" role="status" aria-live="polite"></p>
+      </form>
+  </div>
+
+  <dialog class="content-dialog" id="content-dialog" aria-labelledby="content-title"><button class="dialog-close" aria-label="Close dialog"><svg><use href="#close"/></svg></button><p class="eyebrow" id="content-category"></p><h2 id="content-title"></h2><div id="content-body"></div><button class="button button-teal" data-book>Plan a visit <span class="circle-arrow" aria-hidden="true"><svg><use href="#arrow"/></svg></span></button></dialog>
+  <dialog class="appointment-dialog" id="booking-dialog" aria-labelledby="booking-title">
+    <button class="dialog-close" aria-label="Close appointment form"><svg><use href="#close"/></svg></button>
+    <div class="booking-layout">
+      <div class="booking-visual"><img src="assets/clinic.webp" alt="A calm dental clinic with modern equipment" width="1100" height="735" decoding="async" loading="lazy" fetchpriority="low"><div class="booking-shade"></div><div class="cursor-light" aria-hidden="true"></div><a class="brand" href="#home" data-close-booking><svg><use href="#tooth"/></svg>Dentora</a><div class="booking-visual-copy"><span class="booking-kicker">A little care. A brighter smile.</span><h2>Good care starts<br> with a conversation.</h2><p>Tell us what you need.<br>We'll take it from here.</p></div><span class="booking-visual-footer">Your questions are always welcome.</span></div>
+      <div class="booking-panel"><p class="section-label"><span class="dot"></span> Your next chapter of care</p><h2 id="booking-title">Let's plan your visit.</h2><p class="booking-description">Explore the appointment form. Submissions are disabled in this preview.</p><div id="booking-form-slot"></div></div>
+    </div>
+  </dialog>
+<div class="toast" role="status" aria-live="polite" id="toast"></div>
+</body>
+</html>
+
+

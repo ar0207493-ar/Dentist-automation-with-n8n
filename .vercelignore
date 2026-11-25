@@ -1,0 +1,9 @@
+work/
+automation/
+evolution/
+.git/
+__pycache__/
+*.py
+*.log
+dist/assets/**/*.jpg
+dist/assets/**/*.png

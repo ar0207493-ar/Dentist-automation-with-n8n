@@ -15,8 +15,7 @@ css = "\n".join(
 css = "\n".join(line.rstrip() for line in css.splitlines()) + "\n"
 (root / "site.css").write_text(css, encoding="utf-8")
 version = hashlib.sha256((root / "site.css").read_bytes()).hexdigest()[:10]
-for filename in ("index.html", "about.html"):
-    page = root / filename
+for page in root.glob("*.html"):
     if not page.exists():
         continue
     html = page.read_text(encoding="utf-8")

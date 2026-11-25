@@ -14,7 +14,7 @@ $$('.ref-footer-social a[href="#"]').forEach(link => {
   link.append(frame);
 });
 // Share the menu's rolling label with service pills and footer actions.
-$$('.ref-hero-services button, .ref-footer-columns a, .ref-footer-columns button, .ref-footer-bottom button').forEach(action => {
+$$('.ref-hero-services button, .ref-footer-columns a, .ref-footer-columns button, .ref-footer-bottom a, .ref-footer-bottom button').forEach(action => {
   if (action.closest('.ref-footer-social')) return;
   const label = document.createElement('span');
   label.className = 'ref-nav-label';
@@ -66,6 +66,7 @@ function openBooking(service) {
   if (contentDialog.open) contentDialog.close();
   closeMenu();
   const form = $('#visit-form');
+  if (!form) { location.href = 'contact.html#appointment'; return; }
   if (service && [...form.elements.service.options].some(option => option.value === service)) {
     form.elements.service.value = service;
     form.elements.service.dispatchEvent(new Event('change', {bubbles: true}));
@@ -245,7 +246,7 @@ $$('.ref-visit-fields select').forEach((select, index) => {
 });
 
 const benefitTrack = $('#benefit-track');
-const faqItems = $$('.ref-faq-item');
+const faqItems = $$('.ref-faq-item, .page-visit-step');
 const faqMotion = matchMedia('(prefers-reduced-motion: no-preference)');
 const faqStates = new WeakMap();
 let faqRefreshFrame;
@@ -266,7 +267,7 @@ function expandFaq(item, expanded, immediate = false) {
   item.style.height = startHeight + 'px';
   item.classList.toggle('is-collapsing', !expanded);
   if (expanded) item.open = true;
-  const endHeight = summary.getBoundingClientRect().height + (expanded ? $('.ref-faq-answer', item).getBoundingClientRect().height : 0);
+  const endHeight = summary.getBoundingClientRect().height + (expanded ? $('.ref-faq-answer, .page-visit-answer', item).getBoundingClientRect().height : 0);
 
   const finish = () => {
     item.open = expanded;
@@ -287,7 +288,7 @@ function expandFaq(item, expanded, immediate = false) {
   animation.onfinish = () => { if (state.animation === animation) finish(); };
 }
 faqItems.forEach(item => {
-  const state = {expanded: item.open, animation: null};
+  const state = {expanded: item.open, animation: null, group: item.getAttribute('name') || 'dental-faq'};
   const summary = $('summary', item);
   faqStates.set(item, state);
   // Native grouping remains available without JS; enhanced closing waits for its animation.
@@ -297,7 +298,7 @@ faqItems.forEach(item => {
     event.preventDefault();
     const expanded = !state.expanded;
     if (expanded) faqItems.forEach(other => {
-      if (other !== item && faqStates.get(other).expanded) expandFaq(other, false);
+      if (other !== item && faqStates.get(other).group === state.group && faqStates.get(other).expanded) expandFaq(other, false);
     });
     expandFaq(item, expanded);
   });
@@ -306,7 +307,7 @@ faqItems.forEach(item => {
     state.expanded = item.open;
     summary.setAttribute('aria-expanded', String(item.open));
     if (item.open) faqItems.forEach(other => {
-      if (other !== item && faqStates.get(other).expanded) expandFaq(other, false);
+      if (other !== item && faqStates.get(other).group === state.group && faqStates.get(other).expanded) expandFaq(other, false);
     });
     refreshFaqLayout();
   });
@@ -549,11 +550,11 @@ $$('[data-info]').forEach(button => button.addEventListener('click', () => {
   else showContent('Accessibility', 'A comfortable experience for everyone.', '<p>The page supports keyboard navigation, visible focus indicators, reduced motion preferences, and layouts that adapt to different screen sizes.</p><p>Dialog windows can be closed with Escape, and every form field has a visible label. For appointment help, use the form or email the clinic.</p>', button);
 }));
 
-if ('IntersectionObserver' in window && document.body.dataset.page !== 'about' && document.body.dataset.linkMode !== 'placeholder') {
+if ('IntersectionObserver' in window && document.body.dataset.page === 'home' && document.body.dataset.linkMode !== 'placeholder') {
   const navObserver = new IntersectionObserver(entries => {
     entries.forEach(entry => {
       if (entry.isIntersecting) {
-        $$('.desktop-nav a').forEach(link => link.classList.toggle('active', link.hash === `#${entry.target.id}`));
+        // The main navigation identifies pages; Home section scrolling keeps Home active.
       }
     });
   }, {rootMargin:'-10% 0px -65% 0px'});

@@ -6,3 +6,7 @@ node_modules/
 *.log
 .DS_Store
 Thumbs.db
+work/
+# Optimized WebP assets are the published raster images.
+dist/assets/**/*.jpg
+dist/assets/**/*.png
