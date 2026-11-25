@@ -87,7 +87,7 @@
             <a href="#journal">Journal</a>
             <a href="#appointment">Contact</a>
     </nav>
-    <button class="ref-button ref-white" type="button" data-book>Book an Appointment</button>
+    <button class="ref-button ref-white ref-menu-book" type="button" data-book><span>Book an Appointment</span><span class="ref-circle" aria-hidden="true"><svg><use href="#arrow"/></svg></span></button>
 `
   };
   const page = document.body.dataset.page;
@@ -106,6 +106,19 @@
       link.classList.toggle('active', active);
       if (active) link.setAttribute('aria-current', 'page');
       else link.removeAttribute('aria-current');
+    });
+    host.querySelectorAll('.ref-menu-links a').forEach((link, index) => {
+      const text = link.textContent.trim();
+      const label = document.createElement('span');
+      label.className = 'ref-nav-label';
+      const original = document.createElement('span');
+      original.textContent = text;
+      const repeat = original.cloneNode(true);
+      repeat.setAttribute('aria-hidden', 'true');
+      label.append(original, repeat);
+      link.replaceChildren(label);
+      link.classList.add('ref-roll');
+      link.style.setProperty('--menu-order', index);
     });
   }
   const service = document.body.dataset.appointmentService;
